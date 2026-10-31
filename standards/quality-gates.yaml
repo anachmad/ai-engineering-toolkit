@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "profiles": {
+    "lean": {
+      "requirements": "Acceptance criteria",
+      "code": "Relevant tests",
+      "security": "Secrets, input and authentication baseline",
+      "qa": "Smoke test",
+      "operations": "Run instructions",
+      "release": "Owner decision"
+    },
+    "standard": {
+      "requirements": "Linked requirement IDs",
+      "code": "Automated lint, type, test and build checks where applicable",
+      "security": "Scanning and access review",
+      "qa": "Acceptance and regression",
+      "operations": "Rollback and runbook",
+      "release": "Approved GitLab release gate"
+    },
+    "business-critical": {
+      "requirements": "Approval and end-to-end traceability",
+      "code": "Critical-path coverage and independent review",
+      "security": "Threat-model controls and separate review",
+      "qa": "Scenario matrix and signed UAT where material",
+      "operations": "Tested restore and RTO/RPO evidence",
+      "release": "Separate business and technical approval"
+    }
+  }
+}

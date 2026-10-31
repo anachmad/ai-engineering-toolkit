@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "default_profile": "standard",
+  "profiles": {
+    "lean": {
+      "artifacts": [
+        "README.md",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "docs/00-governance/charter.md",
+        "docs/01-requirements/requirements.md",
+        "docs/02-architecture/architecture.md",
+        "docs/03-delivery/plan.md",
+        "docs/04-quality/verification.md",
+        "docs/05-operations/runbook.md"
+      ],
+      "conditional_artifacts": [
+        "docs/01-requirements/ui-ux.md"
+      ]
+    },
+    "standard": {
+      "artifacts": [
+        "README.md",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "docs/00-governance/charter.md",
+        "docs/01-requirements/requirements.md",
+        "docs/02-architecture/architecture.md",
+        "docs/03-delivery/plan.md",
+        "docs/04-quality/verification.md",
+        "docs/05-operations/runbook.md",
+        "docs/01-requirements/business-requirements.md",
+        "docs/01-requirements/product-requirements.md",
+        "docs/01-requirements/system-requirements.md",
+        "docs/02-architecture/decisions.md",
+        "docs/04-quality/traceability.md",
+        "docs/04-quality/security-review.md"
+      ],
+      "conditional_artifacts": [
+        "docs/01-requirements/ui-ux.md"
+      ]
+    },
+    "business-critical": {
+      "artifacts": [
+        "README.md",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "docs/00-governance/charter.md",
+        "docs/01-requirements/requirements.md",
+        "docs/02-architecture/architecture.md",
+        "docs/03-delivery/plan.md",
+        "docs/04-quality/verification.md",
+        "docs/05-operations/runbook.md",
+        "docs/01-requirements/business-requirements.md",
+        "docs/01-requirements/product-requirements.md",
+        "docs/01-requirements/system-requirements.md",
+        "docs/02-architecture/decisions.md",
+        "docs/04-quality/traceability.md",
+        "docs/04-quality/security-review.md",
+        "docs/00-governance/approvals.md",
+        "docs/04-quality/threat-model.md",
+        "docs/04-quality/access-matrix.md",
+        "docs/05-operations/recovery.md"
+      ],
+      "conditional_artifacts": [
+        "docs/01-requirements/ui-ux.md"
+      ]
+    }
+  },
+  "escalation_factors": [
+    "data sensitivity",
+    "financial integrity",
+    "operational safety",
+    "legal obligations",
+    "high outage impact"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "documents": {
+    "docs/00-governance/charter.md": ["Problem, objectives, scope and exclusions", "Project owner, stakeholders, decisions and approvals"],
+    "docs/01-requirements/requirements.md": ["Business needs, functional and nonfunctional requirements", "Acceptance criteria, assumptions, open questions and linked requirements"],
+    "docs/01-requirements/business-requirements.md": ["Business problem, outcomes, stakeholders and scope", "BR identifiers, assumptions, acceptance criteria and approval"],
+    "docs/01-requirements/product-requirements.md": ["Users, use cases and product outcomes", "FR identifiers, acceptance criteria and links to business requirements"],
+    "docs/01-requirements/system-requirements.md": ["System behavior, interfaces and constraints", "FR and NFR identifiers, acceptance criteria and verification links"],
+    "docs/01-requirements/ui-ux.md": ["Users, interaction flows and states", "Accessibility, design decisions, acceptance criteria and material approvals"],
+    "docs/02-architecture/architecture.md": ["System context, components, data flows and interfaces", "Constraints, risks, significant decisions and review evidence"],
+    "docs/02-architecture/decisions.md": ["Significant ADR identifiers, context, options and decisions", "Consequences, status, owner and review references"],
+    "docs/03-delivery/plan.md": ["Current milestones, dependencies and risks", "Links to tracked issues and decisions"],
+    "docs/04-quality/verification.md": ["Applicable tests, acceptance criteria and critical scenarios", "Test evidence, results, security checks and outstanding gaps"],
+    "docs/04-quality/traceability.md": ["Requirement IDs and linked change requests", "Code, critical tests, evidence and release references"],
+    "docs/04-quality/security-review.md": ["Data sensitivity, access review, input handling and secrets controls", "Applicable scan results, risks, owners and review evidence"],
+    "docs/04-quality/threat-model.md": ["Assets, trust boundaries, threats and abuse cases", "Controls, residual risks, owners and independent review evidence"],
+    "docs/04-quality/access-matrix.md": ["Roles, resources, permissions and least-privilege rationale", "Access reviews, exceptions and approval evidence"],
+    "docs/05-operations/runbook.md": ["Local setup, run instructions, monitoring and operational ownership", "Deployment, incident response, rollback and evidence as applicable"],
+    "docs/05-operations/recovery.md": ["Recovery objectives, dependencies, backup and disaster recovery procedures", "Restore test results, observability and recovery evidence"],
+    "docs/00-governance/approvals.md": ["Accountable project, business and technical approvers", "Independent review and separate release approval evidence"]
+  }
+}
