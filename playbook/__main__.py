@@ -1,5 +1,7 @@
 import argparse
 import json
+import os
+import shutil
 from pathlib import Path
 import string
 import sys
@@ -113,7 +115,8 @@ def init(args, policy, prompts):
             raise ValueError('Existing project manifest conflicts with requested profile or UI selection; audit and review it first')
     profile = policy['profiles'][args.profile]
     paths = profile['artifacts'] + (profile['conditional_artifacts'] if args.ui else [])
-    manifest = {'schema_version': 1, 'name': args.name, 'profile': args.profile, 'ui': 'yes' if args.ui else 'unknown', 'standards_path': str(ROOT / 'standards'), 'status': 'draft'}
+    standards_path = '.engineering/toolkit/standards' if ROOT == base / '.engineering/toolkit' else str(ROOT / 'standards')
+    manifest = {'schema_version': 1, 'name': args.name, 'profile': args.profile, 'ui': 'yes' if args.ui else 'unknown', 'standards_path': standards_path, 'status': 'draft'}
     planned = {'.engineering/project.yaml': json.dumps(manifest, indent=2) + '\n'}
     for name in paths:
         source = ROOT / 'templates/project' / name if name in ('README.md', 'AGENTS.md', 'CLAUDE.md') else ROOT / 'templates/project/document.md'
@@ -165,6 +168,43 @@ def audit(args, policy):
     return 1 if missing else 0
 
 
+def share(args):
+    """Create a project-owned copy and native links, without modifying existing paths."""
+    base = Path(args.path).absolute()
+    if not base.is_dir() or base.is_symlink():
+        raise ValueError('Project path must be an existing directory, not a symlink')
+    toolkit = destination(base, '.engineering/toolkit')
+    links = {
+        '.agents/skills/software-engineering-playbook': 'codex',
+        '.claude/skills/software-engineering-playbook': 'claude',
+    }
+    for name in ('.engineering/toolkit', *links):
+        target = destination(base, name)
+        if target.exists() or target.is_symlink():
+            raise ValueError(f'Path already exists; no files changed: {target}')
+    # Check source symlinks before copying; never follow unexpected links.
+    sources = ('standards', 'skills', 'adapters', 'templates', 'playbook')
+    for name in sources:
+        source = ROOT / name
+        if not source.is_dir() or source.is_symlink() or any(p.is_symlink() for p in source.rglob('*')):
+            raise ValueError(f'Invalid toolkit source: {source}')
+    toolkit.parent.mkdir(parents=True, exist_ok=True)
+    toolkit.mkdir()  # Exclusive creation; never replace an existing toolkit.
+    try:
+        for name in sources:
+            shutil.copytree(ROOT / name, toolkit / name, ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '*.pyo'))
+        for name, host in links.items():
+            target = destination(base, name)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            relative = os.path.relpath(toolkit / 'adapters' / host / 'software-engineering-playbook', target.parent)
+            target.symlink_to(relative, target_is_directory=True)
+            print(f'created: {name} -> {relative}')
+    except OSError as exc:
+        raise OSError(f'Shared setup incomplete; inspect {toolkit} and any created links before retrying: {exc}') from exc
+    print(f'created: {toolkit}')
+    print('Review and commit the project-owned toolkit and links together; update them through project review.')
+
+
 def main():
     parser = argparse.ArgumentParser(description='Generate and audit engineering documentation')
     sub = parser.add_subparsers(dest='command', required=True)
@@ -173,13 +213,19 @@ def main():
     create.add_argument('--profile', required=True, choices=('lean', 'standard', 'business-critical'))
     create.add_argument('--name', required=True)
     create.add_argument('--ui', action='store_true')
+    shared = sub.add_parser('share', help='Add a project-owned toolkit and agent skill links')
+    shared.add_argument('--path', required=True)
     check = sub.add_parser('audit')
     check.add_argument('--path', required=True)
     check.add_argument('--profile', choices=('lean', 'standard', 'business-critical'))
     args = parser.parse_args()
     try:
         policy, prompts = load_policy()
-        return init(args, policy, prompts) or 0 if args.command == 'init' else audit(args, policy)
+        if args.command == 'init':
+            return init(args, policy, prompts) or 0
+        if args.command == 'share':
+            return share(args) or 0
+        return audit(args, policy)
     except (OSError, ValueError, KeyError, TypeError) as exc:
         print(f'error: {exc}', file=sys.stderr)
         return 2
