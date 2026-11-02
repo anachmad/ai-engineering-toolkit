@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "description": "Project manifest version 1; extra fields are preserved.",
+  "required": ["schema_version", "name", "profile", "ui", "standards_path", "status"],
+  "properties": {
+    "schema_version": {"type": "integer", "enum": [1]},
+    "name": {"type": "string", "min_length": 1},
+    "profile": {"type": "string", "enum": ["lean", "standard", "business-critical"]},
+    "ui": {"type": "string", "enum": ["yes", "no", "unknown"]},
+    "standards_path": {"type": "string", "min_length": 1},
+    "status": {"type": "string", "enum": ["draft", "in-review", "approved", "deprecated"]}
+  }
+}

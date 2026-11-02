@@ -1,4 +1,5 @@
 import json
+import hashlib
 from pathlib import Path
 import shutil
 import subprocess
@@ -23,6 +24,9 @@ class SharedProjectTests(unittest.TestCase):
             moved = Path(tmp) / 'moved'
             shutil.move(old, moved)
             toolkit = moved / '.engineering/toolkit'
+            provenance = json.loads((toolkit / 'provenance.json').read_text())
+            path = 'standards/profiles.yaml'
+            self.assertEqual(provenance['files'][path], hashlib.sha256((toolkit / path).read_bytes()).hexdigest())
             for host, folder in [('codex', '.agents'), ('claude', '.claude')]:
                 link = moved / folder / 'skills/software-engineering-playbook'
                 self.assertEqual(link.resolve(), toolkit / 'adapters' / host / 'software-engineering-playbook')

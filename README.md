@@ -63,7 +63,17 @@ python3 -m playbook init \
 
 Add `--ui` if the project has a user interface; this includes a UI/UX document. Without it, the manifest records UI applicability as unknown and the audit asks for review. Use `--profile business-critical` when that profile is appropriate.
 
-The generated project includes a `.engineering/project.yaml` manifest, `AGENTS.md`, `CLAUDE.md`, and documents under `docs/`. Open the drafts with your team and replace the `TBD` prompts with information you have actually agreed upon. The manifest records the absolute path to this toolkit's standards; review it if the toolkit moves or the project is used on another machine.
+The generated project includes a `.engineering/project.yaml` manifest, `AGENTS.md`, `CLAUDE.md`, and documents under `docs/`. The `docs/08-reference/` directory provides a home for supporting source material; keep authoritative requirements and architecture documents linked and clearly identified. Open the drafts with your team and replace the `TBD` prompts with information you have actually agreed upon. A manifest records the standards location; a shared-project setup uses a project-relative path, while a standalone toolkit uses an absolute path. Review it if the toolkit moves or the project is used on another machine.
+
+### Update UI applicability
+
+When a project was initialized with UI applicability unknown, preview a change first:
+
+```sh
+python3 -m playbook set-ui --path /path/to/project --ui yes
+```
+
+After reviewing the preview and authorizing the manifest change, repeat the command with `--apply --expected-sha256 <hash>` using the hash printed by the preview. A changed manifest requires a new preview. The command preserves an existing UI document. Selecting `no` does not delete an existing document. A failure during application can leave a newly created UI draft in place; review the project before retrying.
 
 ### 2. Audit a project
 
@@ -114,7 +124,7 @@ python3 .engineering/toolkit/playbook init --path . --profile standard --name "M
 python3 .engineering/toolkit/playbook audit --path .
 ```
 
-The manifest created this way records a project-relative standards path, so the project can be moved or cloned. An existing manifest is preserved and is not automatically migrated. The project owns its toolkit copy: review updates and commit them like any other project change. This command does not install third-party toolkits or automatically update copies. Relative skill links require filesystem symlink support; Windows and WSL have not been verified.
+The manifest created this way records a project-relative standards path, so the project can be moved or cloned. An existing manifest is preserved and is not automatically migrated. The project owns its toolkit copy: `provenance.json` records hashes of the copied files, including any uncommitted source changes. Review updates and commit them like any other project change; the hashes do not prove a release or approval. This command does not install third-party toolkits or automatically update copies. Relative skill links require filesystem symlink support; Windows and WSL have not been verified.
 
 If both user-level and project-level skills have the same name, choose the project-local skill when the host offers a choice, so the project's checked-in standards apply. Claude Code may ask permission to access files or run commands.
 

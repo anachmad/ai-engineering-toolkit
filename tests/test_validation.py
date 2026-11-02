@@ -31,6 +31,7 @@ class PolicyValidationTests(unittest.TestCase):
             with self.subTest(filename=filename), tempfile.TemporaryDirectory() as tmp:
                 root = Path(tmp)
                 shutil.copytree(ROOT / 'standards', root / 'standards')
+                shutil.copytree(ROOT / 'templates', root / 'templates')
                 path = root / 'standards' / filename
                 policy = json.loads(path.read_text())
                 change(policy)

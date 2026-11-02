@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "description": "Top-level version 1 contracts; path, value, and cross-file checks are applied by the standard-library validator.",
+  "policies": {
+    "profiles": {
+      "required": ["schema_version", "default_profile", "profiles", "escalation_factors"],
+      "properties": {"schema_version": "integer", "default_profile": "string", "profiles": "object", "escalation_factors": "array", "scaffold_files": "object"}
+    },
+    "quality_gates": {
+      "required": ["schema_version", "profiles"],
+      "properties": {"schema_version": "integer", "profiles": "object"}
+    },
+    "document_prompts": {
+      "required": ["schema_version", "documents"],
+      "properties": {"schema_version": "integer", "documents": "object"}
+    }
+  }
+}
