@@ -31,6 +31,10 @@ class SharedProjectTests(unittest.TestCase):
                 link = moved / folder / 'skills/software-engineering-playbook'
                 self.assertEqual(link.resolve(), toolkit / 'adapters' / host / 'software-engineering-playbook')
                 self.assertFalse(Path(link.readlink()).is_absolute())
+                for skill in ('secure-engineering', 'engineering-workflow-router'):
+                    installed = moved / folder / 'skills' / skill
+                    self.assertEqual(installed.resolve(), toolkit / 'adapters' / host / skill)
+                    self.assertTrue((installed / 'SKILL.md').is_file())
             result = run(toolkit, moved, 'init', '--path', moved, '--profile', 'standard', '--name', 'Shared example')
             self.assertEqual(result.returncode, 0, result.stderr)
             manifest = json.loads((moved / '.engineering/project.yaml').read_text())

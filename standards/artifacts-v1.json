@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "artifacts": {
+    "brd": {
+      "status": "approved",
+      "versions": {
+        "1": {
+          "contract": "standards/brd-v1.json",
+          "standard": "skills/software-engineering-playbook/references/brd-standard.md",
+          "template": "skills/software-engineering-playbook/templates/brd-template.md",
+          "example": "examples/brd-example.md",
+          "validator": "brd"
+        }
+      }
+    },
+    "prd": {
+      "status": "approved",
+      "approval_scope": "section structure only",
+      "versions": {
+        "1": {
+          "contract": "standards/prd-v1.json",
+          "standard": "skills/software-engineering-playbook/references/prd-standard.md",
+          "template": "skills/software-engineering-playbook/templates/prd-template.md",
+          "example": "examples/prd-example.md",
+          "validator": "section-structure"
+        }
+      }
+    },
+    "srs": {
+      "status": "proposed"
+    },
+    "sad": {
+      "status": "proposed"
+    },
+    "adr": {
+      "status": "proposed"
+    },
+    "data-model": {
+      "status": "proposed"
+    },
+    "api": {
+      "status": "proposed"
+    },
+    "ui-ux": {
+      "status": "proposed"
+    },
+    "implementation-plan": {
+      "status": "proposed"
+    },
+    "test-plan": {
+      "status": "proposed"
+    },
+    "test-report": {
+      "status": "proposed"
+    },
+    "code-review": {
+      "status": "proposed"
+    },
+    "security-review": {
+      "status": "proposed"
+    },
+    "release-plan": {
+      "status": "proposed"
+    },
+    "operations-runbook": {
+      "status": "proposed"
+    }
+  }
+}

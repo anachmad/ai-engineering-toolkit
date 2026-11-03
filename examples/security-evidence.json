@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "gates": {
+    "S1": {"outcome": "NOT_RUN"},
+    "S2": {"outcome": "NOT_RUN"},
+    "S3": {"outcome": "NOT_RUN"},
+    "S4": {"outcome": "NOT_RUN"},
+    "S5": {"outcome": "NOT_RUN"}
+  },
+  "findings": []
+}

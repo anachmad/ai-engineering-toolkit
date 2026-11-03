@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "sections": [
+    "Document Information",
+    "Executive Summary",
+    "Product Background & Context",
+    "Product Vision & Goals",
+    "Target Users & Personas",
+    "User Problems & Needs",
+    "Product Scope",
+    "Product Features & Capabilities",
+    "User Journeys & Workflows",
+    "Product Requirements",
+    "User Stories & Use Cases",
+    "Business Rules",
+    "Data & Information Requirements",
+    "UX/UI Requirements",
+    "Non-Functional Expectations",
+    "Integration Requirements",
+    "Success Metrics & Analytics",
+    "Assumptions, Constraints & Dependencies",
+    "Risks, Open Questions & Decisions",
+    "Acceptance & Traceability"
+  ]
+}

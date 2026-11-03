@@ -2,7 +2,7 @@
 
 A shared set of engineering standards and documentation tools for teams working with **Codex** and **Claude Code**.
 
-The toolkit helps you start a project's documentation, review an existing project's gaps, and keep decisions connected to requirements and evidence. It is an early foundation: the documentation playbook and scaffolder are available now; workflow routing, third-party toolkit installation, and CI enforcement are planned for later phases.
+The toolkit helps you start a project's documentation, review an existing project's gaps, and keep decisions connected to requirements and evidence. It is an early foundation: the documentation playbook, scaffolder, local workflow router, and security evidence evaluator are available now. Third-party toolkit installation and CI enforcement are not implemented.
 
 ## Why this exists
 
@@ -127,6 +127,10 @@ python3 .engineering/toolkit/playbook audit --path .
 The manifest created this way records a project-relative standards path, so the project can be moved or cloned. An existing manifest is preserved and is not automatically migrated. The project owns its toolkit copy: `provenance.json` records hashes of the copied files, including any uncommitted source changes. Review updates and commit them like any other project change; the hashes do not prove a release or approval. This command does not install third-party toolkits or automatically update copies. Relative skill links require filesystem symlink support; Windows and WSL have not been verified.
 
 If both user-level and project-level skills have the same name, choose the project-local skill when the host offers a choice, so the project's checked-in standards apply. Claude Code may ask permission to access files or run commands.
+
+## Security and workflow routing
+
+Use the [Phase 2 guide](docs/phase-2-orchestration.md) to classify risk, inspect configured skills, route a task, and evaluate recorded security evidence. The router does not run external skills; an enabled integration is not necessarily installed, compatible, or approved. Missing required evidence blocks the relevant evaluation.
 
 ## Verify the toolkit
 

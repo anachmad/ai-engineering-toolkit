@@ -1,0 +1,470 @@
+{
+  "schema_version": 1,
+  "skills": {
+    "software-engineering-playbook": {
+      "enabled": true,
+      "provider": "internal",
+      "kind": "skill",
+      "capabilities": [
+        "documentation",
+        "requirements"
+      ],
+      "source": null,
+      "approved_commit": null,
+      "approved_tree_sha256": null,
+      "supported_hosts": {
+        "codex": "unverified",
+        "claude": "unverified"
+      },
+      "install_requirements": [],
+      "fallback": "manual evidence required; block mandatory gates if evidence is absent",
+      "output_contract": "scope, method, findings, evidence references, limitations, reviewer"
+    },
+    "secure-engineering": {
+      "enabled": true,
+      "provider": "internal",
+      "kind": "skill",
+      "capabilities": [
+        "security-design",
+        "security-review"
+      ],
+      "source": null,
+      "approved_commit": null,
+      "approved_tree_sha256": null,
+      "supported_hosts": {
+        "codex": "unverified",
+        "claude": "unverified"
+      },
+      "install_requirements": [],
+      "fallback": "manual evidence required; block mandatory gates if evidence is absent",
+      "output_contract": "scope, method, findings, evidence references, limitations, reviewer",
+      "required_for": {
+        "intents": [
+          "discovery",
+          "requirements",
+          "architecture",
+          "planning",
+          "ui-design",
+          "design-critique",
+          "implementation",
+          "debugging",
+          "security-review",
+          "testing",
+          "functional-qa",
+          "release",
+          "maintenance"
+        ],
+        "risks": [
+          "high",
+          "critical"
+        ]
+      }
+    },
+    "gstack": {
+      "enabled": true,
+      "provider": "gstack",
+      "kind": "skill",
+      "capabilities": [
+        "discovery"
+      ],
+      "source": "https://github.com/garrytan/gstack",
+      "approved_commit": null,
+      "approved_tree_sha256": null,
+      "supported_hosts": {
+        "codex": "unverified",
+        "claude": "unverified"
+      },
+      "install_requirements": [],
+      "fallback": "manual evidence required; block mandatory gates if evidence is absent",
+      "output_contract": "scope, method, findings, evidence references, limitations, reviewer"
+    },
+    "superpowers": {
+      "enabled": true,
+      "provider": "superpowers",
+      "kind": "skill",
+      "capabilities": [
+        "planning",
+        "implementation",
+        "debugging",
+        "testing"
+      ],
+      "source": "https://github.com/obra/superpowers",
+      "approved_commit": null,
+      "approved_tree_sha256": null,
+      "supported_hosts": {
+        "codex": "unverified",
+        "claude": "unverified"
+      },
+      "install_requirements": [],
+      "fallback": "manual evidence required; block mandatory gates if evidence is absent",
+      "output_contract": "scope, method, findings, evidence references, limitations, reviewer"
+    },
+    "ui-ux-pro-max": {
+      "enabled": true,
+      "provider": "ui-ux-pro-max",
+      "kind": "skill",
+      "capabilities": [
+        "ui-design"
+      ],
+      "source": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+      "approved_commit": null,
+      "approved_tree_sha256": null,
+      "supported_hosts": {
+        "codex": "unverified",
+        "claude": "unverified"
+      },
+      "install_requirements": [],
+      "fallback": "manual evidence required; block mandatory gates if evidence is absent",
+      "output_contract": "scope, method, findings, evidence references, limitations, reviewer"
+    },
+    "impeccable": {
+      "enabled": true,
+      "provider": "impeccable",
+      "kind": "skill",
+      "capabilities": [
+        "design-critique"
+      ],
+      "source": "https://github.com/pbakaus/impeccable",
+      "approved_commit": null,
+      "approved_tree_sha256": null,
+      "supported_hosts": {
+        "codex": "unverified",
+        "claude": "unverified"
+      },
+      "install_requirements": [],
+      "fallback": "manual evidence required; block mandatory gates if evidence is absent",
+      "output_contract": "scope, method, findings, evidence references, limitations, reviewer"
+    },
+    "differential-review": {
+      "enabled": true,
+      "provider": "trailofbits",
+      "kind": "skill",
+      "capabilities": [
+        "security-diff"
+      ],
+      "source": "https://github.com/trailofbits/skills",
+      "approved_commit": null,
+      "approved_tree_sha256": null,
+      "supported_hosts": {
+        "codex": "unverified",
+        "claude": "unverified"
+      },
+      "install_requirements": [
+        "git",
+        "reviewed marketplace installation"
+      ],
+      "fallback": "manual evidence required; block mandatory gates if evidence is absent",
+      "output_contract": "scope, method, findings, evidence references, limitations, reviewer",
+      "native_identifiers": [
+        "differential-review"
+      ],
+      "required_for": {
+        "intents": [
+          "security-review"
+        ],
+        "risks": [
+          "high",
+          "critical"
+        ]
+      }
+    },
+    "static-analysis": {
+      "enabled": true,
+      "provider": "trailofbits",
+      "kind": "plugin",
+      "capabilities": [
+        "static-analysis"
+      ],
+      "source": "https://github.com/trailofbits/skills",
+      "approved_commit": null,
+      "approved_tree_sha256": null,
+      "supported_hosts": {
+        "codex": "unverified",
+        "claude": "unverified"
+      },
+      "install_requirements": [
+        "CodeQL or Semgrep as applicable",
+        "reviewed marketplace installation"
+      ],
+      "fallback": "manual evidence required; block mandatory gates if evidence is absent",
+      "output_contract": "scope, method, findings, evidence references, limitations, reviewer",
+      "native_identifiers": [
+        "codeql",
+        "semgrep",
+        "sarif-parsing"
+      ]
+    },
+    "supply-chain-risk-auditor": {
+      "enabled": true,
+      "provider": "trailofbits",
+      "kind": "skill",
+      "capabilities": [
+        "supply-chain"
+      ],
+      "source": "https://github.com/trailofbits/skills",
+      "approved_commit": null,
+      "approved_tree_sha256": null,
+      "supported_hosts": {
+        "codex": "unverified",
+        "claude": "unverified"
+      },
+      "install_requirements": [
+        "uv",
+        "network or populated offline cache",
+        "gh recommended"
+      ],
+      "fallback": "manual evidence required; block mandatory gates if evidence is absent",
+      "output_contract": "scope, method, findings, evidence references, limitations, reviewer",
+      "native_identifiers": [
+        "supply-chain-risk-auditor"
+      ]
+    },
+    "insecure-defaults": {
+      "enabled": false,
+      "provider": "trailofbits",
+      "kind": "skill",
+      "capabilities": [
+        "insecure-defaults"
+      ],
+      "source": "https://github.com/trailofbits/skills",
+      "approved_commit": null,
+      "approved_tree_sha256": null,
+      "supported_hosts": {
+        "codex": "unverified",
+        "claude": "unverified"
+      },
+      "install_requirements": [],
+      "fallback": "manual evidence required; block mandatory gates if evidence is absent",
+      "output_contract": "scope, method, findings, evidence references, limitations, reviewer"
+    },
+    "sharp-edges": {
+      "enabled": false,
+      "provider": "trailofbits",
+      "kind": "skill",
+      "capabilities": [
+        "sharp-edges"
+      ],
+      "source": "https://github.com/trailofbits/skills",
+      "approved_commit": null,
+      "approved_tree_sha256": null,
+      "supported_hosts": {
+        "codex": "unverified",
+        "claude": "unverified"
+      },
+      "install_requirements": [],
+      "fallback": "manual evidence required; block mandatory gates if evidence is absent",
+      "output_contract": "scope, method, findings, evidence references, limitations, reviewer"
+    },
+    "engineering-workflow-router": {
+      "enabled": true,
+      "provider": "internal",
+      "kind": "skill",
+      "capabilities": [
+        "routing"
+      ],
+      "source": null,
+      "approved_commit": null,
+      "approved_tree_sha256": null,
+      "supported_hosts": {
+        "codex": "unverified",
+        "claude": "unverified"
+      },
+      "install_requirements": [],
+      "fallback": "manual routing against canonical policy",
+      "output_contract": "intent, primary, secondary, required evidence, limitations"
+    }
+  },
+  "routes": {
+    "discovery": {
+      "primary": "gstack",
+      "secondary": [
+        "software-engineering-playbook",
+        "secure-engineering"
+      ],
+      "security_stage": "discovery"
+    },
+    "requirements": {
+      "primary": "software-engineering-playbook",
+      "secondary": [
+        "secure-engineering"
+      ],
+      "security_stage": "requirements"
+    },
+    "architecture": {
+      "primary": "superpowers",
+      "secondary": [
+        "secure-engineering",
+        "software-engineering-playbook"
+      ],
+      "security_stage": "architecture"
+    },
+    "ui-design": {
+      "primary": "ui-ux-pro-max",
+      "secondary": [
+        "impeccable"
+      ],
+      "security_stage": "requirements"
+    },
+    "design-critique": {
+      "primary": "impeccable",
+      "secondary": [],
+      "security_stage": "review"
+    },
+    "implementation": {
+      "primary": "superpowers",
+      "secondary": [
+        "secure-engineering"
+      ],
+      "security_stage": "implementation"
+    },
+    "debugging": {
+      "primary": "superpowers",
+      "secondary": [
+        "secure-engineering"
+      ],
+      "security_stage": "implementation"
+    },
+    "security-review": {
+      "primary": "secure-engineering",
+      "secondary": [
+        "differential-review",
+        "static-analysis",
+        "supply-chain-risk-auditor"
+      ],
+      "security_stage": "review"
+    },
+    "documentation-audit": {
+      "primary": "software-engineering-playbook",
+      "secondary": [],
+      "security_stage": null
+    },
+    "release": {
+      "primary": "release-governance",
+      "secondary": [
+        "secure-engineering"
+      ],
+      "security_stage": "release"
+    },
+    "planning": {
+      "primary": "superpowers",
+      "secondary": [
+        "secure-engineering"
+      ],
+      "security_stage": "planning"
+    },
+    "testing": {
+      "primary": "superpowers",
+      "secondary": [
+        "secure-engineering"
+      ],
+      "security_stage": "testing"
+    },
+    "maintenance": {
+      "primary": "superpowers",
+      "secondary": [
+        "secure-engineering"
+      ],
+      "security_stage": "maintenance"
+    },
+    "functional-qa": {
+      "primary": "gstack",
+      "secondary": [
+        "superpowers"
+      ],
+      "security_stage": "testing"
+    }
+  },
+  "security": {
+    "default_risk": "medium",
+    "factor_levels": {
+      "data_sensitivity": "high",
+      "internet_exposure": "medium",
+      "authentication": "medium",
+      "complex_authorization": "high",
+      "financial_transactions": "high",
+      "privileged_operations": "high",
+      "external_integrations": "medium",
+      "regulatory_obligations": "high",
+      "high_business_impact": "critical"
+    },
+    "stage_gates": {
+      "discovery": [
+        "S1"
+      ],
+      "requirements": [
+        "S1"
+      ],
+      "architecture": [
+        "S1"
+      ],
+      "planning": [
+        "S1"
+      ],
+      "implementation": [
+        "S2"
+      ],
+      "review": [
+        "S3"
+      ],
+      "testing": [
+        "S4"
+      ],
+      "release": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5"
+      ],
+      "maintenance": [
+        "S4"
+      ]
+    },
+    "gates": {
+      "S1": {
+        "name": "Requirements and architecture",
+        "minimum_risk": "low",
+        "accepted_skill_capabilities": [
+          "security-design"
+        ]
+      },
+      "S2": {
+        "name": "Implementation",
+        "minimum_risk": "low",
+        "accepted_skill_capabilities": [
+          "security-review"
+        ]
+      },
+      "S3": {
+        "name": "Code review",
+        "minimum_risk": "medium",
+        "accepted_skill_capabilities": [
+          "security-review",
+          "security-diff"
+        ]
+      },
+      "S4": {
+        "name": "Dependency and static analysis",
+        "minimum_risk": "medium",
+        "accepted_skill_capabilities": [
+          "static-analysis",
+          "supply-chain"
+        ]
+      },
+      "S5": {
+        "name": "Release readiness",
+        "minimum_risk": "low",
+        "accepted_skill_capabilities": [
+          "security-review"
+        ]
+      }
+    },
+    "authorized_waiver_approvers": [],
+    "critical_exception_enabled": false,
+    "profile_minimum_risk": {
+      "lean": "low",
+      "standard": "medium",
+      "business-critical": "high"
+    }
+  }
+}

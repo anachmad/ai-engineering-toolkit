@@ -182,6 +182,10 @@ def init(args, policy, prompts):
     planned = {'.engineering/project.yaml': json.dumps(manifest, indent=2) + '\n'}
     for name in paths:
         source = ROOT / 'templates/project' / name if name in ('README.md', 'AGENTS.md', 'CLAUDE.md') else ROOT / 'templates/project/document.md'
+        if name == 'docs/01-requirements/business-requirements.md':
+            source = ROOT / 'skills/software-engineering-playbook/templates/brd-template.md'
+        if name == 'docs/01-requirements/product-requirements.md':
+            source = ROOT / 'skills/software-engineering-playbook/templates/prd-template.md'
         sections = '\n'.join(f'## {section}\n\nTBD.\n' for section in prompts['documents'].get(name, []))
         template = source.read_text().replace('{{project_name}}', '${project_name}').replace('{{title}}', '${title}').replace('{{sections}}', '${sections}')
         planned[name] = string.Template(template).substitute(project_name=args.name, title=title(name), sections=sections)
@@ -299,16 +303,15 @@ def share(args):
     if not base.is_dir():
         raise ValueError('Project path must be an existing directory')
     toolkit = destination(base, '.engineering/toolkit')
-    links = {
-        '.agents/skills/software-engineering-playbook': 'codex',
-        '.claude/skills/software-engineering-playbook': 'claude',
-    }
+    links = {f'{directory}/skills/{skill}': (host, skill)
+             for directory, host in (('.agents', 'codex'), ('.claude', 'claude'))
+             for skill in ('software-engineering-playbook', 'secure-engineering', 'engineering-workflow-router')}
     for name in ('.engineering/toolkit', *links):
         target = destination(base, name)
         if target.exists() or target.is_symlink():
             raise ValueError(f'Path already exists; no files changed: {target}')
     # Check source symlinks before copying; never follow unexpected links.
-    sources = ('standards', 'skills', 'adapters', 'templates', 'playbook')
+    sources = ('standards', 'skills', 'adapters', 'templates', 'playbook', 'orchestration')
     for name in sources:
         source = ROOT / name
         if not source.is_dir() or source.is_symlink() or any(p.is_symlink() for p in source.rglob('*')):
@@ -321,10 +324,10 @@ def share(args):
         hashes = {p.relative_to(toolkit).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(toolkit.rglob('*')) if p.is_file()}
         provenance = {'schema_version': 1, 'description': 'SHA-256 of copied files, including any uncommitted source changes; not a release or approval record.', 'files': hashes}
         (toolkit / 'provenance.json').write_text(json.dumps(provenance, indent=2) + '\n', encoding='utf-8')
-        for name, host in links.items():
+        for name, (host, skill) in links.items():
             target = destination(base, name)
             target.parent.mkdir(parents=True, exist_ok=True)
-            relative = os.path.relpath(toolkit / 'adapters' / host / 'software-engineering-playbook', target.parent)
+            relative = os.path.relpath(toolkit / 'adapters' / host / skill, target.parent)
             target.symlink_to(relative, target_is_directory=True)
             print(f'created: {name} -> {relative}')
     except OSError as exc:
@@ -351,8 +354,31 @@ def main():
     check = sub.add_parser('audit')
     check.add_argument('--path', required=True)
     check.add_argument('--profile', choices=('lean', 'standard', 'business-critical'))
+    brd = sub.add_parser('validate-brd', help='Validate a BRD against the shared BRD contract')
+    brd.add_argument('--path', required=True)
+    artifact = sub.add_parser('validate-artifact', help='Validate an approved artifact against a selected standard version')
+    artifact.add_argument('--path', required=True)
+    artifact.add_argument('--artifact', required=True)
+    artifact.add_argument('--standard-version', required=True)
+    artifact.add_argument('--profile', required=True, choices=('lean', 'standard', 'business-critical'))
     args = parser.parse_args()
     try:
+        if args.command == 'validate-artifact':
+            if __package__:
+                from .artifacts import validate_artifact
+            else:
+                # Direct directory execution places the package parent outside sys.path.
+                sys.path.insert(0, str(ROOT))
+                from playbook.artifacts import validate_artifact
+            result = validate_artifact(args.path, args.artifact, args.standard_version, args.profile)
+            print(json.dumps(result, indent=2))
+            return 1 if result['outcome'] == 'FAIL' else 0
+        if args.command == 'validate-brd':
+            if __package__:
+                from .brd import run
+            else:
+                from brd import run
+            return run(args.path)
         policy, prompts = load_policy()
         if args.command == 'init':
             return init(args, policy, prompts) or 0
