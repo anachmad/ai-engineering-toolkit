@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "sections": [
+    "Document Information",
+    "Executive Summary",
+    "Business Context",
+    "Problem Statement",
+    "Business Objectives",
+    "Success Metrics / KPI",
+    "Stakeholders & Users",
+    "Current State / As-Is",
+    "Target State / To-Be",
+    "Business Requirements",
+    "Scope",
+    "Business Rules",
+    "Assumptions, Constraints & Dependencies",
+    "Risks & Business Impact",
+    "Priority & Phasing",
+    "Acceptance / Business Readiness Criteria",
+    "Open Questions & Decisions",
+    "Traceability"
+  ],
+  "metadata": [
+    "Title",
+    "Version",
+    "Status",
+    "Owner",
+    "Date"
+  ],
+  "tables": {
+    "Business Objectives": [
+      "Objective ID",
+      "Business objective"
+    ],
+    "Success Metrics / KPI": [
+      "KPI ID",
+      "Measurement definition",
+      "Business objective ID",
+      "Baseline",
+      "Evidence"
+    ],
+    "Business Requirements": [
+      "Requirement ID",
+      "Business need",
+      "Business objective ID"
+    ],
+    "Traceability": [
+      "Business objective ID",
+      "Business requirement ID",
+      "KPI ID"
+    ]
+  }
+}

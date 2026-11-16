@@ -1,6 +1,6 @@
-# PRD standard v1 — approved section structure
+# PRD standard v1 — approved standard and template
 
-The 20 level-two headings and their order are approved. The machine-readable heading contract is `standards/prd-v1.json`. The descriptions below are guidance; detailed field, status and cross-document validation rules remain subject to review. Use the shared PRD template.
+The user approved this PRD standard and its accompanying template on 2026-11-04. The 20 level-two headings and their order are approved. The machine-readable heading contract is `standards/prd-v1.json`. The descriptions below are guidance. Detailed field rules are approved and enforced by PRD contract v2; cross-document validation remains unimplemented. Use the shared PRD template.
 
 ## Document Information
 
@@ -84,4 +84,10 @@ Record acceptance criteria and traceability to sources and verification.
 
 ## General guidance and limitations
 
-Use stable `PR-001` style product requirement IDs. For each product requirement record the description, source requirement or authorized source, priority, actor or stakeholder, acceptance criteria and status. Link business requirements where applicable; Lean projects can use combined requirements. Unknown information is `TBD`; never invent evidence, targets or approvals. Separate verified facts from assumptions, open questions and decisions. Human review is necessary for product meaning, completeness, acceptance and approval. The current validator checks only headings, section content and TBD warnings; it does not check IDs, field completeness, relationships, semantics, applicability or approval.
+Use stable product requirement IDs. Follow `skills/software-engineering-playbook/references/requirement-id-compatibility.md`; `PR-001` is the default when no prior format exists. For each product requirement record the description, source requirement or authorized source, priority, actor or stakeholder, acceptance criteria and status. Link business requirements where applicable; Lean projects can use combined requirements. Unknown information is `TBD`; never invent evidence, targets or approvals. Separate verified facts from assumptions, open questions and decisions. Human review is necessary for product meaning, completeness, acceptance and approval. PRD contract v1 checks section structure only. Contract v2 also checks the seven requirement fields, local ID format and uniqueness, priority and status; it does not verify cross-document relationships, semantics, applicability or approval. See `docs/proposals/prd-requirement-rules.md` in the source repository for the approved field rules.
+
+## Approved PRD requirement fields (contract v2)
+
+The Product Requirements table has the seven columns shown in the template. Each requirement ID is unique within the document and remains stable; use the existing project format where present, otherwise use the `PR-001` default; retired IDs are not reused. Record a description, source, priority, actor or stakeholder, acceptance criteria and status. Separate multiple acceptance criteria with `<br>`. Source may refer to a BR or an owner-authorized external source; its authority and existence require review.
+
+Priority is `Must`, `Should`, `Could`, or `TBD`. Requirement status is `Draft`, `In review`, `Approved`, `Deferred`, or `TBD`; `Approved` is a claim, not independently verified approval. These are requirement statuses, separate from the canonical document statuses. All seven cells need values; use `TBD` for unknowns. A fully TBD row is a draft placeholder and produces a warning. Sources, semantic quality, cross-document links, and human approval are not verified by local checks.

@@ -18,7 +18,7 @@ class PrdStructureTests(unittest.TestCase):
     def test_template_and_standard_match_approved_headings(self):
         self.assertEqual([x[3:] for x in TEMPLATE.read_text().splitlines() if x.startswith('## ')], CONTRACT['sections'])
         standard = (ROOT / 'skills/software-engineering-playbook/references/prd-standard.md').read_text()
-        self.assertEqual([x[3:] for x in standard.splitlines() if x.startswith('## ')][:-1], CONTRACT['sections'])
+        self.assertEqual([x[3:] for x in standard.splitlines() if x.startswith('## ')][:20], CONTRACT['sections'])
         result = validate(TEMPLATE)
         self.assertEqual(result.returncode, 0, result.stderr)
         report = json.loads(result.stdout)

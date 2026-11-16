@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "formats": {
+    "BR": [{"prefix": "BR-", "digits": 2}],
+    "PR": [
+      {"prefix": "F-A", "digits": 2},
+      {"prefix": "F-B", "digits": 2},
+      {"prefix": "F-C", "digits": 2},
+      {"prefix": "F-D", "digits": 2},
+      {"prefix": "F-E", "digits": 2},
+      {"prefix": "F-F", "digits": 2}
+    ]
+  }
+}

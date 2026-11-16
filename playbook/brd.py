@@ -7,7 +7,8 @@ ROOT = Path(__file__).resolve().parent.parent
 ID = re.compile(r'^(BO|BR|KPI)-\d{3,}$')
 
 
-def validate(text, contract):
+def validate(text, contract, id_formats=None):
+    from .id_formats import matches
     findings = []
 
     def add(level, location, message):
@@ -104,8 +105,8 @@ def validate(text, contract):
             identifier = row[0]
             if all(v.upper() == 'TBD' for v in row):
                 continue
-            if not ID.fullmatch(identifier) or not identifier.startswith(prefix + '-'):
-                add('ERROR', loc, f'Expected {prefix}-001 style ID, got {identifier!r}')
+            if not matches(identifier, prefix, id_formats, prefix + r'-[0-9]{3,}'):
+                add('ERROR', loc, f'Invalid {prefix} ID {identifier!r} for the selected format')
                 continue
             if identifier in definitions[prefix]:
                 add('ERROR', loc, f'Duplicate ID: {identifier}')
@@ -119,7 +120,7 @@ def validate(text, contract):
             return []
         parts = [v.strip() for v in value.split(',')]
         for item in parts:
-            if not ID.fullmatch(item) or not item.startswith(prefix + '-') or item not in definitions[prefix]:
+            if not matches(item, prefix, id_formats, prefix + r'-[0-9]{3,}') or item not in definitions[prefix]:
                 add('ERROR', loc, f'Unknown or invalid {prefix} reference: {item or "(empty)"}')
         return parts
     for identifier, (loc, value) in objectives.items():

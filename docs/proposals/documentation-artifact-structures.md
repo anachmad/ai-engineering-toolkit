@@ -1,6 +1,6 @@
 # Proposed documentation structures
 
-Status: PRD section names and order approved by the user; detailed PRD field rules and all other artifact structures remain **PROPOSED — pending formal approval**. These headings reproduce the current change request; they are not active templates or enforced contracts. This proposal supersedes the earlier 17-section PRD outline for review, without deleting its historical record. Applicability is separate from structure and remains governed by existing project profiles.
+Status: PRD standard and template approved by the user; detailed PRD field rules are approved; all other artifact structures remain **PROPOSED — pending formal approval**. These headings reproduce the current change request; they are not active templates or enforced contracts. This proposal supersedes the earlier 17-section PRD outline for review, without deleting its historical record. Applicability is separate from structure and remains governed by existing project profiles.
 
 ## PRD
 
@@ -201,7 +201,7 @@ Status: PRD section names and order approved by the user; detailed PRD field rul
 
 ## Proposed cross-cutting contract and review
 
-Each eventual approved artifact contract should record its identifier and standard version, purpose/audience, required and optional content, exact section order, metadata and field formats, ID and relationship rules, validation, approval/quality criteria, applicability and example. BRD v1 and the PRD section structure are registered as approved; detailed PRD validation is not approved or implemented. Approve each other artifact and its field rules before enabling validation or generation.
+Each eventual approved artifact contract should record its identifier and standard version, purpose/audience, required and optional content, exact section order, metadata and field formats, ID and relationship rules, validation, approval/quality criteria, applicability and example. BRD v1 and the PRD section structure are registered as approved; local PRD field validation is approved and implemented in v2; cross-document validation remains unimplemented. Approve each other artifact and its field rules before enabling validation or generation.
 
 A PRD requirement is proposed to carry ID, description, source, priority, actor/stakeholder, acceptance criteria and status. SRS requirements should be testable, linked to an authorized source and have measurable NFR criteria when applicable. SAD decisions need rationale, trade-offs and links to relevant ADRs; address relevant NFRs, security, operations and diagrams. Use OpenAPI as the API contract where appropriate. Code review belongs in the PR/MR workflow, not necessarily a separate file.
 

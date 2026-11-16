@@ -10,12 +10,20 @@
           "template": "skills/software-engineering-playbook/templates/brd-template.md",
           "example": "examples/brd-example.md",
           "validator": "brd"
+        },
+        "2": {
+          "contract": "standards/brd-v2.json",
+          "standard": "skills/software-engineering-playbook/references/brd-standard.md",
+          "template": "skills/software-engineering-playbook/templates/brd-template.md",
+          "example": "examples/brd-example.md",
+          "validator": "brd",
+          "supports_project_id_formats": true
         }
       }
     },
     "prd": {
       "status": "approved",
-      "approval_scope": "section structure only",
+      "approval_scope": "PRD standard, template and detailed field rules",
       "versions": {
         "1": {
           "contract": "standards/prd-v1.json",
@@ -23,6 +31,23 @@
           "template": "skills/software-engineering-playbook/templates/prd-template.md",
           "example": "examples/prd-example.md",
           "validator": "section-structure"
+        },
+        "2": {
+          "contract": "standards/prd-v2.json",
+          "standard": "skills/software-engineering-playbook/references/prd-standard.md",
+          "template": "skills/software-engineering-playbook/templates/prd-template.md",
+          "example": "examples/prd-example.md",
+          "validator": "prd-fields",
+          "approval_scope": "PRD structure and detailed field rules"
+        },
+        "3": {
+          "contract": "standards/prd-v3.json",
+          "standard": "skills/software-engineering-playbook/references/prd-standard.md",
+          "template": "skills/software-engineering-playbook/templates/prd-template.md",
+          "example": "examples/prd-example.md",
+          "validator": "prd-fields",
+          "approval_scope": "PRD structure and detailed field rules",
+          "supports_project_id_formats": true
         }
       }
     },

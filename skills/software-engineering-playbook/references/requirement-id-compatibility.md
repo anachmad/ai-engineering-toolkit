@@ -1,0 +1,7 @@
+# Requirement ID compatibility
+
+Decision recorded 2026-11-06: retain a project's established requirement IDs and formats when creating, auditing, or revising its documents. Continue the applicable existing format for new IDs where the project already uses one. When no existing format is found for that requirement type, use the default defined by the applicable standard. Keep IDs unique within their applicable scope and preserve references. Never silently renumber existing requirements or fabricate mappings; identify ambiguity and request owner review where necessary.
+
+For example, Filio Pilot uses `BR-01` and `F-A01`; preserve those identifiers and their respective formats. These examples are observations, not proof that any particular BR and feature are linked.
+
+BRD v2 and PRD v3 accept a project format file through `validate-artifact --id-formats <file>`; old versions retain their fixed defaults. A format file explicitly lists a literal uppercase prefix and exact digit count per requirement type. Refer to `examples/filio-pilot-id-formats.json` in the source repository for an illustrative configuration. The default applies for types absent from that file. The tool does not discover or prove existing formats automatically: inspect the project and select formats explicitly. It does not verify references across documents. Using a legacy ID format does not exempt a document from its selected contract's structure and other rules.
