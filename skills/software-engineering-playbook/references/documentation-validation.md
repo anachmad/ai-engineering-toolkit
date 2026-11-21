@@ -23,3 +23,9 @@ python3 playbook validate-artifact --artifact prd --standard-version 3 --profile
 ```
 
 The file has schema version 1 and a `formats` object keyed by `BO`, `BR`, `KPI` or `PR`. Each value is a list of `{ "prefix": "F-A", "digits": 2 }` rules. Prefixes are literal, uppercase letters, digits or hyphens, start with a letter and end with a non-digit; digits is an exact count from 1 to 12. Types not configured retain the standard default. See `examples/filio-pilot-id-formats.json` in the source repository. Old versions reject this option and retain their existing checks. The tool does not infer a format or validate source links between documents.
+
+## Check PRD references against a selected BRD
+
+For PRD v3, add `--brd-source path/to/brd.md` to check source IDs against the explicitly selected BRD's canonical `Business Requirements` table. Supply `--id-formats path/to/id-formats.json` when the project uses established ID formats. The source field accepts comma-separated BR IDs and other source descriptions. A matching ID only confirms its presence in that table; the tool does not establish source authority, semantic alignment, approval, or project-wide traceability. Other source descriptions remain unverified. A missing or malformed BRD table stops validation with an error; an unknown or malformed BR ID produces FAIL. Without `--brd-source`, sources remain unverified.
+
+Existing documents such as Filio Pilot may have different headings and tables; they cannot be used as canonical BRD input without a reviewed adaptation. Never change their IDs or overwrite the original to make validation pass. `brd_source_check` records whether the selected table was checked; it is not evidence that all sources or requirements were verified.

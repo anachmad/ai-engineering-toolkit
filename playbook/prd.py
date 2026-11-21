@@ -5,7 +5,7 @@ from . import sections
 from .id_formats import matches as matches_id
 
 
-def validate(text, contract, id_formats=None):
+def validate(text, contract, id_formats=None, business_ids=None):
     findings = sections.validate(text, contract)
     findings = [f for f in findings if f['location'] != 'review']
 
@@ -81,8 +81,19 @@ def validate(text, contract, id_formats=None):
                 if status and status not in config['status']:
                     add('ERROR', location, f'Invalid status {status!r}; use ' + ', '.join(config['status']))
                 if source and source != 'TBD':
-                    add('WARN', location, f'Source {source!r} is not verified; review its location and authority')
+                    for ref in (part.strip() for part in source.split(',')):
+                        if not ref:
+                            add('ERROR', location, 'Empty source reference')
+                        elif ref == 'TBD':
+                            continue
+                        elif business_ids is not None and matches_id(ref, 'BR', id_formats, r'BR-[0-9]{3,}'):
+                            if ref not in business_ids:
+                                add('ERROR', location, f'BR source {ref} not found in selected BRD')
+                        elif business_ids is not None and (ref.startswith('BR-') or any(ref.startswith(rule['prefix']) for rule in (id_formats or {}).get('BR', []))):
+                            add('ERROR', location, f'Invalid BR source ID {ref!r} for selected format')
+                        else:
+                            add('WARN', location, f'Source {ref!r} is not verified; review its location and authority')
                 if status == 'Approved':
                     add('WARN', location, 'Approved status is self-reported; human approval evidence is not verified')
-    add('WARN', 'review', 'Semantic review, cross-document references and human approval are not verified')
+    add('WARN', 'review', 'Semantic review, source authority and human approval are not verified')
     return findings
