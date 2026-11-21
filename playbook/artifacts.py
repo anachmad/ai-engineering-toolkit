@@ -5,7 +5,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 
-def validate_artifact(path, kind, version, profile, id_formats_path=None):
+def validate_artifact(path, kind, version, profile, id_formats_path=None, brd_source=None):
     registry = json.loads((ROOT / 'standards/artifacts-v1.json').read_text(encoding='utf-8'))
     if registry.get('schema_version') != 1:
         raise ValueError('Unsupported artifact registry version')
@@ -43,7 +43,17 @@ def validate_artifact(path, kind, version, profile, id_formats_path=None):
         from .id_formats import load
         id_formats = load(id_formats_path)
     text = Path(path).read_text(encoding='utf-8')
-    findings = validate(text, contract, id_formats) if item.get('supports_project_id_formats') else validate(text, contract)
+    source_ids = None
+    if brd_source:
+        if kind != 'prd' or item['validator'] != 'prd-fields':
+            raise ValueError('BRD source checking requires a PRD field validator')
+        from .traceability import business_ids
+        brd_contract = json.loads((ROOT / 'standards/brd-v1.json').read_text(encoding='utf-8'))
+        source_ids = business_ids(Path(brd_source).read_text(encoding='utf-8'), brd_contract, id_formats)
+    if kind == 'prd' and item['validator'] == 'prd-fields':
+        findings = validate(text, contract, id_formats, source_ids)
+    else:
+        findings = validate(text, contract, id_formats) if item.get('supports_project_id_formats') else validate(text, contract)
     outcome = 'FAIL' if any(x['level'] == 'ERROR' for x in findings) else 'WARN' if findings else 'PASS'
     return {
         'artifact': kind, 'standard_version': version, 'profile': profile,
@@ -54,8 +64,9 @@ def validate_artifact(path, kind, version, profile, id_formats_path=None):
         'outcome': outcome, 'findings': findings,
         'profile_applicability_enforced': False,
         'standard_version_embedded_in_artifact': 'NOT_VERIFIED',
+        'brd_source_check': {'status': 'CHECKED_ID_EXISTENCE' if brd_source else 'NOT_RUN', 'path': str(brd_source) if brd_source else None, 'scope': 'Selected BRD table only; authority, meaning and completeness not verified'},
         'semantic_review': 'NOT_RUN', 'human_approval': 'NOT_VERIFIED',
         'release_authorized': False,
-        'limitations': ['Local checks only; project-wide traceability and approvals are not verified',
+        'limitations': ['Project-wide traceability, source authority and approvals are not verified',
                         'Document-level validation does not enforce lifecycle or security gates']
     }

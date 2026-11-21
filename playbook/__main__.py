@@ -366,6 +366,7 @@ def main():
     artifact.add_argument('--standard-version', required=True)
     artifact.add_argument('--profile', required=True, choices=('lean', 'standard', 'business-critical'))
     artifact.add_argument('--id-formats', help='Explicit project ID formats JSON file')
+    artifact.add_argument('--brd-source', help='BRD to check for referenced business requirement IDs')
     args = parser.parse_args()
     try:
         if args.command == 'validate-artifact':
@@ -375,7 +376,7 @@ def main():
                 # Direct directory execution places the package parent outside sys.path.
                 sys.path.insert(0, str(ROOT))
                 from playbook.artifacts import validate_artifact
-            result = validate_artifact(args.path, args.artifact, args.standard_version, args.profile, args.id_formats)
+            result = validate_artifact(args.path, args.artifact, args.standard_version, args.profile, args.id_formats, args.brd_source)
             print(json.dumps(result, indent=2))
             return 1 if result['outcome'] == 'FAIL' else 0
         if args.command == 'validate-brd':
