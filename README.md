@@ -39,6 +39,18 @@ cd ai-engineering-toolkit
 python3 --version
 ```
 
+If `python3 --version` reports a version older than 3.11, check whether a newer
+interpreter is already available with `python3.11 --version` or
+`python3.12 --version`. Use that interpreter for every command below; for example:
+
+```sh
+python3.11 -m playbook init --path /path/to/my-project --profile standard --name "My Project"
+```
+
+If no Python 3.11 or newer interpreter is available, install one using the
+supported method for your operating system or ask your system administrator.
+Keep the system's existing `python3` intact; operating-system tools may need it.
+
 Run the commands below from the toolkit directory. Replace the example paths and names with your own. The project path can point to a new directory or an existing project; existing files will be preserved.
 
 ### 1. Generate project documentation
