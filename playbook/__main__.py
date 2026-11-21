@@ -1,3 +1,8 @@
+import sys
+
+if sys.version_info < (3, 11):
+    sys.exit('error: Python 3.11 or newer is required; try python3.11 -m playbook')
+
 import argparse
 import difflib
 import hashlib
@@ -7,7 +12,6 @@ import os
 import shutil
 from pathlib import Path
 import string
-import sys
 
 ROOT = Path(__file__).resolve().parent.parent
 

@@ -1,7 +1,11 @@
 """Phase 2 policy CLI: inspect, route and evaluate supplied evidence locally."""
+import sys
+
+if sys.version_info < (3, 11):
+    sys.exit('error: Python 3.11 or newer is required; try python3.11 -m orchestration')
+
 import argparse
 import json
-import sys
 from . import core
 
 
