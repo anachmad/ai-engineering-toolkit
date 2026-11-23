@@ -19,6 +19,12 @@ This toolkit gives both agents one canonical set of engineering standards. It al
 
 The scaffolder creates missing files and preserves existing files. Generated documents contain `TBD` prompts: your team supplies the actual requirements, decisions, approvals, and evidence. A generated file or a successful presence check does not mean a project is compliant or ready to release.
 
+## Documentation standards
+
+The BRD and PRD have shared standards, templates, and validators. A PRD can also be checked against the IDs in an explicitly selected BRD. Existing project ID formats can be configured; a matching ID does not verify that the relationship is correct or approved. See the [validation guide](skills/software-engineering-playbook/references/documentation-validation.md).
+
+For the SRS, the owner has approved the [16-section structure and the existing system requirements path](docs/proposals/srs-contract-review.md). The [requirement fields and validation rules](docs/proposals/srs-requirement-fields.md) are still proposed. A dedicated SRS template and validator have not been implemented; existing project documents are not automatically migrated.
+
 ## Choose a profile
 
 | Profile | When to consider it | What it adds |
