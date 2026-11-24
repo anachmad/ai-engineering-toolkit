@@ -88,7 +88,18 @@
       }
     },
     "adr": {
-      "status": "proposed"
+      "status": "approved",
+      "approval_scope": "ADR structure and field rules; profile and cross-document checks pending",
+      "versions": {
+        "1": {
+          "contract": "standards/adr-v1.json",
+          "standard": "skills/software-engineering-playbook/references/adr-standard.md",
+          "template": "skills/software-engineering-playbook/templates/adr-template.md",
+          "example": "examples/adr-example.md",
+          "validator": "adr-fields",
+          "supports_project_id_formats": true
+        }
+      }
     },
     "data-model": {
       "status": "proposed"

@@ -20,7 +20,7 @@ def validate_artifact(path, kind, version, profile, id_formats_path=None, brd_so
     item = entry.get('versions', {}).get(version)
     if item is None:
         raise ValueError(f'Unsupported {kind} standard version: {version}')
-    validators = {'brd': {'brd'}, 'prd': {'section-structure', 'prd-fields'}, 'srs': {'srs-fields'}, 'sad': {'sad-fields', 'sad-profile'}}
+    validators = {'brd': {'brd'}, 'prd': {'section-structure', 'prd-fields'}, 'srs': {'srs-fields'}, 'sad': {'sad-fields', 'sad-profile'}, 'adr': {'adr-fields'}}
     if item.get('validator') not in validators.get(kind, set()):
         raise ValueError('Unsupported artifact validator')
     # Contract path is constrained to the canonical registry's standard directory.
@@ -32,6 +32,8 @@ def validate_artifact(path, kind, version, profile, id_formats_path=None, brd_so
         raise ValueError('Unsupported BRD contract schema version')
     if kind == 'brd':
         from .brd import validate
+    elif item['validator'] == 'adr-fields':
+        from .adr import validate
     elif item['validator'] in ('sad-fields', 'sad-profile'):
         from .sad import validate
     elif item['validator'] == 'srs-fields':
@@ -69,10 +71,12 @@ def validate_artifact(path, kind, version, profile, id_formats_path=None, brd_so
     sad_mode = None
     sad_applicability = 'NOT_EVALUATED'
     reference_checks = []
+    if sad_id_sources and (kind != 'sad' or item['validator'] != 'sad-profile'):
+        raise ValueError('SAD ID source checking requires SAD standard version 2')
     if sad_id_sources and not project_root:
         raise ValueError('SAD ID source checking requires --project-root')
-    if project_root and (kind != 'sad' or item['validator'] != 'sad-profile'):
-        raise ValueError('Project-root SAD checks require SAD standard version 2')
+    if project_root and not (kind == 'adr' or (kind == 'sad' and item['validator'] == 'sad-profile')):
+        raise ValueError('Project-root reference checks require ADR v1 or SAD v2')
     if kind == 'sad' and item['validator'] == 'sad-profile':
         manifest = None
         if project_root:
@@ -102,6 +106,14 @@ def validate_artifact(path, kind, version, profile, id_formats_path=None, brd_so
             findings.extend(ref_findings)
         else:
             findings.append({'level': 'WARN', 'location': 'references', 'message': 'Project root not selected; local references not verified'})
+    elif kind == 'adr':
+        findings = validate(text, contract, id_formats)
+        if project_root:
+            from .sad_references import check
+            ref_findings, reference_checks = check(text, path, project_root)
+            findings.extend(ref_findings)
+        else:
+            findings.append({'level': 'WARN', 'location': 'references', 'message': 'Project root not selected; references not verified'})
     elif kind == 'srs':
         findings = validate(text, contract, id_formats, priorities, product_sources)
     elif kind == 'prd' and item['validator'] == 'prd-fields':
@@ -114,7 +126,7 @@ def validate_artifact(path, kind, version, profile, id_formats_path=None, brd_so
         'id_format_source': str(id_formats_path) if id_formats_path else 'standard default',
         'project_id_formats': id_formats or {},
         'approval_scope': item.get('approval_scope', entry.get('approval_scope', 'BRD structure')),
-        'validation_scope': 'SAD structure and local fields' if kind == 'sad' else ('SRS structure and local requirement fields' if kind == 'srs' else ('BRD-local checks' if kind == 'brd' else ('PRD structure and local requirement fields' if item['validator'] == 'prd-fields' else 'section structure only'))),
+        'validation_scope': 'ADR structure and local fields' if kind == 'adr' else ('SAD structure and local fields' if kind == 'sad' else ('SRS structure and local requirement fields' if kind == 'srs' else ('BRD-local checks' if kind == 'brd' else ('PRD structure and local requirement fields' if item['validator'] == 'prd-fields' else 'section structure only')))),
         'sad_applicability': sad_applicability, 'sad_mode': sad_mode, 'reference_checks': reference_checks,
         'srs_priority_values': priorities,
         'prd_source_check': {'status': 'CHECKED_ID_EXISTENCE' if prd_source else 'NOT_RUN', 'path': str(prd_source) if prd_source else None, 'scope': 'Selected PRD table only; authority and meaning not verified'},

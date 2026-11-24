@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "sections": [
+    "Metadata & Status",
+    "Context",
+    "Decision Drivers",
+    "Considered Options",
+    "Decision",
+    "Rationale & Trade-offs",
+    "Consequences",
+    "Related Requirements & References"
+  ],
+  "metadata": [
+    "ID",
+    "Title",
+    "Decision status",
+    "Document status",
+    "Decision owner",
+    "Date",
+    "Approval / evidence",
+    "Supersedes / superseded by"
+  ],
+  "decision_status": [
+    "Proposed",
+    "Accepted",
+    "Rejected",
+    "Superseded",
+    "TBD"
+  ],
+  "document_status": [
+    "draft",
+    "in-review",
+    "approved",
+    "deprecated",
+    "TBD"
+  ]
+}

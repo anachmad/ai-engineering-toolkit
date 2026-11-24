@@ -34,3 +34,7 @@ For SRS, read `skills/software-engineering-playbook/references/srs-standard.md` 
 ## Architecture documents
 
 When a full SAD is applicable, use `skills/software-engineering-playbook/references/sad-standard.md` and `skills/software-engineering-playbook/templates/sad-template.md`. Preserve project documents and follow the approved profile. Run `python3 <toolkit-root>/playbook validate-artifact --artifact sad --standard-version 2 --profile <profile> --project-root <project-root> --path <sad.md>` and report unresolved warnings. Follow the validation guide for Standard mode selection and explicit source checks; source meaning and approval remain unverified.
+
+## Architecture decision records
+
+When documenting a significant architecture decision, read `skills/software-engineering-playbook/references/adr-standard.md` and use `skills/software-engineering-playbook/templates/adr-template.md`. Preserve existing decision records and project ID formats. Run `python3 <toolkit-root>/playbook validate-artifact --artifact adr --standard-version 1 --profile <profile> --path <adr.md>`; use the validation guide for optional project ID formats and local reference checks. Report unverified evidence, project-wide uniqueness and human approval separately.
