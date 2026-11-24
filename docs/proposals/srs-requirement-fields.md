@@ -1,6 +1,6 @@
 # Usulan aturan field SRS
 
-Status: **Usulan untuk review; belum disetujui atau diimplementasikan.** Pengguna menyetujui 16 heading SRS dan penggunaan path `docs/01-requirements/system-requirements.md` pada 2026-11-23. Persetujuan itu belum mencakup tabel, field, nilai status, atau aturan validasi di bawah ini.
+Status: **Aturan field dan tabel disetujui oleh pengguna pada 2026-11-24.** Validator SRS v1 dan konfigurasi ID/prioritas tersedia. Pemeriksaan lintas dokumen terbatas pada keberadaan ID dalam satu tabel PRD yang dipilih; lihat panduan validasi untuk keterbatasan.
 
 ## Usulan tabel requirement
 
@@ -45,7 +45,7 @@ Contoh NFR di atas belum lengkap: target, kondisi, prioritas, dan alasan tidak a
 | Sel berisi `TBD`, termasuk baris template | WARN | Menandakan belum lengkap; bukan bukti bahwa requirement siap diterima. |
 | `N/A` tanpa alasan atau pada field yang tidak diizinkan | ERROR | Penggunaan dan alasan tetap perlu ditinjau manusia. |
 | Sumber tidak dipilih, tidak tersedia, atau sumber eksternal | WARN / NOT VERIFIED | Tidak boleh menyatakan sumber ada atau berwenang tanpa pemeriksaan. |
-| ID sumber diperiksa dan tidak ditemukan | ERROR | Pemeriksaan lintas SRS–PRD belum diimplementasikan; usulan ini bukan klaim bahwa sudah tersedia. |
+| ID sumber diperiksa dan tidak ditemukan | ERROR | Validator memeriksa keberadaan ID dalam satu PRD kanonis yang dipilih; tidak memverifikasi makna atau otoritas sumber. |
 | Makna, testability, kesesuaian keamanan, authority dan approval | Human review / NOT VERIFIED | Lolos validasi tidak berarti dokumen disetujui atau pengujian telah dilakukan. |
 
 ## Keputusan untuk review

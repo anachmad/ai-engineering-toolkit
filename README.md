@@ -23,7 +23,9 @@ The scaffolder creates missing files and preserves existing files. Generated doc
 
 The BRD and PRD have shared standards, templates, and validators. A PRD can also be checked against the IDs in an explicitly selected BRD. Existing project ID formats can be configured; a matching ID does not verify that the relationship is correct or approved. See the [validation guide](skills/software-engineering-playbook/references/documentation-validation.md).
 
-For the SRS, the owner has approved the [16-section structure and the existing system requirements path](docs/proposals/srs-contract-review.md). The [requirement fields and validation rules](docs/proposals/srs-requirement-fields.md) are still proposed. A dedicated SRS template and validator have not been implemented; existing project documents are not automatically migrated.
+The SRS has an approved 16-section structure, [template](skills/software-engineering-playbook/templates/srs-template.md), and validator for local requirement fields. The [approved field rules](docs/proposals/srs-requirement-fields.md) preserve existing project ID and priority conventions when configured. SRS validation can check referenced IDs in one selected PRD; human review remains necessary.
+
+SAD v2 supports a concise eight-section document for Lean, a full 18-section document for Business Critical, and an owner-selected option for Standard. For Standard, record `"sad_mode": "concise"` or `"sad_mode": "full"` in `.engineering/project.yaml`. When validating, provide `--project-root` so the tool can read that choice and check supported local references. An unselected Standard mode requires review. A matching file or ID does not prove that its meaning, evidence, or approval is valid. See the [validation guide](skills/software-engineering-playbook/references/documentation-validation.md) for commands and limitations. Existing documents are not automatically migrated.
 
 ## Choose a profile
 
@@ -76,12 +78,26 @@ For a Standard project:
 python3 -m playbook init \
   --path /tmp/my-standard-project \
   --profile standard \
+  --sad-mode concise \
   --name "My Standard Project"
 ```
+
+For Standard, choose `--sad-mode concise` or `--sad-mode full` with the project owner. If omitted, initialization preserves existing architecture files and defers a missing architecture draft until a mode is selected. Lean uses the concise SAD template and Business Critical uses the full template.
 
 Add `--ui` if the project has a user interface; this includes a UI/UX document. Without it, the manifest records UI applicability as unknown and the audit asks for review. Use `--profile business-critical` when that profile is appropriate.
 
 The generated project includes a `.engineering/project.yaml` manifest, `AGENTS.md`, `CLAUDE.md`, and documents under `docs/`. The `docs/08-reference/` directory provides a home for supporting source material; keep authoritative requirements and architecture documents linked and clearly identified. Open the drafts with your team and replace the `TBD` prompts with information you have actually agreed upon. A manifest records the standards location; a shared-project setup uses a project-relative path, while a standalone toolkit uses an absolute path. Review it if the toolkit moves or the project is used on another machine.
+
+### Select the SAD mode for an existing Standard project
+
+Preview the project owner’s choice, then apply it using the manifest hash shown by the preview:
+
+```sh
+python3 -m playbook set-sad-mode --path /path/to/project --sad-mode concise
+python3 -m playbook set-sad-mode --path /path/to/project --sad-mode concise --apply --expected-sha256 <hash-from-preview>
+```
+
+Choose `full` instead when appropriate. Run `init` again with the same profile and UI options to generate a missing architecture draft. The manifest update and initialization preserve existing architecture files; neither converts an existing document to another format.
 
 ### Update UI applicability
 
@@ -138,7 +154,7 @@ For a new project, initialize it using the project-owned copy:
 
 ```sh
 cd /path/to/existing-project
-python3 .engineering/toolkit/playbook init --path . --profile standard --name "My Project"
+python3 .engineering/toolkit/playbook init --path . --profile standard --sad-mode concise --name "My Project"
 python3 .engineering/toolkit/playbook audit --path .
 ```
 

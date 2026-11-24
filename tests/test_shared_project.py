@@ -35,7 +35,7 @@ class SharedProjectTests(unittest.TestCase):
                     installed = moved / folder / 'skills' / skill
                     self.assertEqual(installed.resolve(), toolkit / 'adapters' / host / skill)
                     self.assertTrue((installed / 'SKILL.md').is_file())
-            result = run(toolkit, moved, 'init', '--path', moved, '--profile', 'standard', '--name', 'Shared example')
+            result = run(toolkit, moved, 'init', '--path', moved, '--profile', 'standard', '--name', 'Shared example', '--sad-mode', 'concise')
             self.assertEqual(result.returncode, 0, result.stderr)
             manifest = json.loads((moved / '.engineering/project.yaml').read_text())
             self.assertEqual(manifest['standards_path'], '.engineering/toolkit/standards')

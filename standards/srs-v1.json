@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "sections": [
+    "Document Information",
+    "Introduction",
+    "System Overview",
+    "System Context & Boundaries",
+    "Actors & Roles",
+    "Functional Requirements",
+    "Non-Functional Requirements",
+    "Business Rules & Constraints",
+    "Data Requirements",
+    "External Interface Requirements",
+    "State & Workflow Specifications",
+    "Error & Exception Handling",
+    "Security & Access Requirements",
+    "Assumptions & Dependencies",
+    "Verification & Acceptance Criteria",
+    "Traceability Matrix"
+  ],
+  "requirement_table": {
+    "columns": [
+      "ID",
+      "Description",
+      "Source",
+      "Priority",
+      "Preconditions",
+      "Expected behavior / criterion",
+      "Failure conditions",
+      "Verification method",
+      "Status"
+    ],
+    "priority": [
+      "Must",
+      "Should",
+      "Could",
+      "TBD"
+    ],
+    "verification": [
+      "Test",
+      "Inspection",
+      "Analysis",
+      "Demonstration",
+      "TBD"
+    ],
+    "status": [
+      "Draft",
+      "In review",
+      "Approved",
+      "Deferred",
+      "TBD"
+    ]
+  }
+}

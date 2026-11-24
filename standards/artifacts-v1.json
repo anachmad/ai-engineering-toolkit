@@ -52,10 +52,40 @@
       }
     },
     "srs": {
-      "status": "proposed"
+      "status": "approved",
+      "approval_scope": "SRS structure and requirement fields",
+      "versions": {
+        "1": {
+          "contract": "standards/srs-v1.json",
+          "standard": "skills/software-engineering-playbook/references/srs-standard.md",
+          "template": "skills/software-engineering-playbook/templates/srs-template.md",
+          "example": "examples/srs-example.md",
+          "validator": "srs-fields",
+          "supports_project_id_formats": true
+        }
+      }
     },
     "sad": {
-      "status": "proposed"
+      "status": "approved",
+      "approval_scope": "SAD structure and field rules; profile applicability and reference verification pending",
+      "versions": {
+        "1": {
+          "contract": "standards/sad-v1.json",
+          "standard": "skills/software-engineering-playbook/references/sad-standard.md",
+          "template": "skills/software-engineering-playbook/templates/sad-template.md",
+          "example": "examples/sad-example.md",
+          "validator": "sad-fields"
+        },
+        "2": {
+          "contract": "standards/sad-v2.json",
+          "standard": "skills/software-engineering-playbook/references/sad-standard.md",
+          "template": "skills/software-engineering-playbook/templates/sad-template.md",
+          "example": "examples/sad-example.md",
+          "validator": "sad-profile",
+          "supports_project_id_formats": true,
+          "approval_scope": "SAD structure, fields, profile mode and staged reference checks"
+        }
+      }
     },
     "adr": {
       "status": "proposed"

@@ -173,23 +173,45 @@ def init(args, policy, prompts):
     base.mkdir(parents=True, exist_ok=True)
     manifest_path = destination(base, '.engineering/project.yaml')
     # An existing manifest determines project policy; never mix scaffolds from different profiles.
+    old = None
     if manifest_path.exists():
         old = json.loads(manifest_path.read_text())
         validate_manifest(old)
         validate_standards_location(base, old)
         if old.get('profile') != args.profile or old.get('ui') != ('yes' if args.ui else 'unknown'):
             raise ValueError('Existing project manifest conflicts with requested profile or UI selection; audit and review it first')
+    requested_mode = args.sad_mode
+    if args.profile == 'lean' and requested_mode not in (None, 'concise'):
+        raise ValueError('Lean requires concise SAD')
+    if args.profile == 'business-critical' and requested_mode not in (None, 'full'):
+        raise ValueError('Business Critical requires full SAD')
+    if old and args.profile == 'standard' and requested_mode and old.get('sad_mode') != requested_mode:
+        raise ValueError('Existing manifest SAD mode differs or is absent; update the manifest through reviewed project configuration first')
+    selected_mode = ('concise' if args.profile == 'lean' else 'full' if args.profile == 'business-critical' else (old.get('sad_mode') if old else requested_mode))
     profile = policy['profiles'][args.profile]
     paths = profile['artifacts'] + (profile['conditional_artifacts'] if args.ui else [])
     standards_path = '.engineering/toolkit/standards' if ROOT == base / '.engineering/toolkit' else str(ROOT / 'standards')
     manifest = {'schema_version': 1, 'name': args.name, 'profile': args.profile, 'ui': 'yes' if args.ui else 'unknown', 'standards_path': standards_path, 'status': 'draft'}
+    if args.profile == 'standard' and selected_mode:
+        manifest['sad_mode'] = selected_mode
     planned = {'.engineering/project.yaml': json.dumps(manifest, indent=2) + '\n'}
     for name in paths:
         source = ROOT / 'templates/project' / name if name in ('README.md', 'AGENTS.md', 'CLAUDE.md') else ROOT / 'templates/project/document.md'
+        if name == 'docs/02-architecture/architecture.md':
+            if not selected_mode:
+                if destination(base, name).is_file():
+                    print(f'preserved: {name}')
+                else:
+                    print('review: Standard SAD mode not selected; architecture draft not generated (REVIEW_REQUIRED)')
+                continue
+            template_name = 'sad-concise-template.md' if selected_mode == 'concise' else 'sad-template.md'
+            source = ROOT / 'skills/software-engineering-playbook/templates' / template_name
         if name == 'docs/01-requirements/business-requirements.md':
             source = ROOT / 'skills/software-engineering-playbook/templates/brd-template.md'
         if name == 'docs/01-requirements/product-requirements.md':
             source = ROOT / 'skills/software-engineering-playbook/templates/prd-template.md'
+        if name == 'docs/01-requirements/system-requirements.md':
+            source = ROOT / 'skills/software-engineering-playbook/templates/srs-template.md'
         sections = '\n'.join(f'## {section}\n\nTBD.\n' for section in prompts['documents'].get(name, []))
         template = source.read_text().replace('{{project_name}}', '${project_name}').replace('{{title}}', '${title}').replace('{{sections}}', '${sections}')
         planned[name] = string.Template(template).substitute(project_name=args.name, title=title(name), sections=sections)
@@ -239,6 +261,8 @@ def audit(args, policy):
         print(f'{"present" if present else "missing"}: {name}')
         if not present:
             missing.append(name)
+    if manifest['profile'] == 'standard' and 'sad_mode' not in manifest:
+        print('review: Standard SAD mode not selected (REVIEW_REQUIRED)')
     if manifest['ui'] == 'unknown':
         print('review: UI applicability is unknown')
     print('review: content, risk escalation, approvals, traceability and gate evidence require human assessment; presence is not compliance')
@@ -301,6 +325,44 @@ def set_ui(args, policy, prompts):
     print('Updated project manifest. Review and commit the changes.')
 
 
+
+def set_sad_mode(args):
+    base = project_base(args.path)
+    path = destination(base, '.engineering/project.yaml')
+    original = path.read_bytes()
+    manifest = json.loads(original)
+    validate_manifest(manifest)
+    validate_standards_location(base, manifest)
+    if manifest['profile'] != 'standard':
+        raise ValueError('SAD mode selection is only available for Standard projects')
+    digest = hashlib.sha256(original).hexdigest()
+    print(f'manifest sha256: {digest}')
+    updated = dict(manifest, sad_mode=args.sad_mode)
+    replacement = json.dumps(updated, indent=2, ensure_ascii=False) + '\n'
+    print(''.join(difflib.unified_diff(original.decode('utf-8').splitlines(keepends=True), replacement.splitlines(keepends=True), fromfile='current project manifest', tofile='proposed project manifest')), end='')
+    if not args.apply:
+        print('Preview only. Run with --apply and --expected-sha256 after review.')
+        return
+    if args.expected_sha256 != digest or path.read_bytes() != original:
+        raise ValueError('Manifest hash differs from preview (or --expected-sha256 is missing); review again')
+    if updated == manifest:
+        print('SAD mode already selected; manifest preserved.')
+        return
+    temp_path = None
+    try:
+        with tempfile.NamedTemporaryFile('w', encoding='utf-8', dir=path.parent, delete=False) as f:
+            temp_path = Path(f.name)
+            f.write(replacement)
+        os.chmod(temp_path, path.stat().st_mode & 0o777)
+        if path.read_bytes() != original:
+            raise ValueError('Manifest changed during update; review again')
+        os.replace(temp_path, path)
+    finally:
+        if temp_path is not None and temp_path.exists():
+            temp_path.unlink()
+    print('Updated SAD mode; run init again to create a missing architecture draft.')
+
+
 def share(args):
     """Create a project-owned copy and native links, without modifying existing paths."""
     base = project_base(args.path)
@@ -348,11 +410,17 @@ def main():
     create.add_argument('--profile', required=True, choices=('lean', 'standard', 'business-critical'))
     create.add_argument('--name', required=True)
     create.add_argument('--ui', action='store_true')
+    create.add_argument('--sad-mode', choices=('concise', 'full'), help='Owner-selected SAD mode for Standard projects')
     ui = sub.add_parser('set-ui', help='Preview or apply an explicit UI applicability change')
     ui.add_argument('--path', required=True)
     ui.add_argument('--ui', required=True, choices=('yes', 'no', 'unknown'))
     ui.add_argument('--apply', action='store_true')
     ui.add_argument('--expected-sha256', help='Manifest SHA-256 from the reviewed preview; required with --apply')
+    sad = sub.add_parser('set-sad-mode', help='Preview or apply a Standard project SAD mode')
+    sad.add_argument('--path', required=True)
+    sad.add_argument('--sad-mode', required=True, choices=('concise', 'full'))
+    sad.add_argument('--apply', action='store_true')
+    sad.add_argument('--expected-sha256')
     shared = sub.add_parser('share', help='Add a project-owned toolkit and agent skill links')
     shared.add_argument('--path', required=True)
     check = sub.add_parser('audit')
@@ -367,6 +435,10 @@ def main():
     artifact.add_argument('--profile', required=True, choices=('lean', 'standard', 'business-critical'))
     artifact.add_argument('--id-formats', help='Explicit project ID formats JSON file')
     artifact.add_argument('--brd-source', help='BRD to check for referenced business requirement IDs')
+    artifact.add_argument('--srs-priorities', help='JSON file containing project-specific SRS priority values')
+    artifact.add_argument('--prd-source', help='PRD to check for referenced product requirement IDs')
+    artifact.add_argument('--project-root', help='Project root for SAD manifest and local reference checks')
+    artifact.add_argument('--sad-id-sources', help='JSON mapping of BR/PR to project-relative source documents')
     args = parser.parse_args()
     try:
         if args.command == 'validate-artifact':
@@ -376,7 +448,7 @@ def main():
                 # Direct directory execution places the package parent outside sys.path.
                 sys.path.insert(0, str(ROOT))
                 from playbook.artifacts import validate_artifact
-            result = validate_artifact(args.path, args.artifact, args.standard_version, args.profile, args.id_formats, args.brd_source)
+            result = validate_artifact(args.path, args.artifact, args.standard_version, args.profile, args.id_formats, args.brd_source, args.srs_priorities, args.prd_source, args.project_root, args.sad_id_sources)
             print(json.dumps(result, indent=2))
             return 1 if result['outcome'] == 'FAIL' else 0
         if args.command == 'validate-brd':
@@ -391,6 +463,8 @@ def main():
             return init(args, policy, prompts) or 0
         if args.command == 'set-ui':
             return set_ui(args, policy, prompts) or 0
+        if args.command == 'set-sad-mode':
+            return set_sad_mode(args) or 0
         if args.command == 'share':
             return share(args) or 0
         return audit(args, policy)
