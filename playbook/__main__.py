@@ -185,7 +185,7 @@ def init(args, policy, prompts):
         raise ValueError('Lean requires concise SAD')
     if args.profile == 'business-critical' and requested_mode not in (None, 'full'):
         raise ValueError('Business Critical requires full SAD')
-    if old and requested_mode and old.get('sad_mode') != requested_mode:
+    if old and args.profile == 'standard' and requested_mode and old.get('sad_mode') != requested_mode:
         raise ValueError('Existing manifest SAD mode differs or is absent; update the manifest through reviewed project configuration first')
     selected_mode = ('concise' if args.profile == 'lean' else 'full' if args.profile == 'business-critical' else (old.get('sad_mode') if old else requested_mode))
     profile = policy['profiles'][args.profile]

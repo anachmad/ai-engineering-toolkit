@@ -30,6 +30,14 @@ class SadScaffoldingTests(unittest.TestCase):
                     self.assertEqual(manifest['sad_mode'], mode)
                 self.assertEqual(run(*args).returncode, 0)
 
+    def test_explicit_profile_modes_are_idempotent(self):
+        for profile, mode in [('lean', 'concise'), ('business-critical', 'full')]:
+            with self.subTest(profile=profile), tempfile.TemporaryDirectory() as tmp:
+                args = ['init', '--path', tmp, '--profile', profile, '--name', 'Test', '--sad-mode', mode]
+                self.assertEqual(run(*args).returncode, 0)
+                result = run(*args)
+                self.assertEqual(result.returncode, 0, result.stderr)
+
     def test_standard_mode_review_then_safe_selection(self):
         with tempfile.TemporaryDirectory() as tmp:
             args = ['init', '--path', tmp, '--profile', 'standard', '--name', 'Test']

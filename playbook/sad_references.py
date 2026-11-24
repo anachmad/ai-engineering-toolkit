@@ -5,6 +5,8 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 LINK = re.compile(r'(?<!!)\[[^\]]*\]\(([^)]+)\)')
+INLINE_CODE = re.compile(r'(?<!`) (`+) (?!`) .*? (?<!`) \1 (?!`)', re.VERBOSE)
+BARE_URL = re.compile(r'https?://[^\s<>]+', re.I)
 
 
 def check(text, document, project_root, id_sources=None, id_formats=None, toolkit_root=None):
@@ -44,14 +46,27 @@ def check(text, document, project_root, id_sources=None, id_formats=None, toolki
             continue
         if fence is not None:
             continue
+        # Mask inline code before interpreting references, preserving positions.
+        visible = INLINE_CODE.sub(lambda m: ' ' * len(m.group()), line)
+        links = list(LINK.finditer(visible))
+        # Link targets and bare URLs are not requirement references; labels may be.
+        for link in reversed(links):
+            start, end = link.span(1)
+            visible = visible[:start] + ' ' * (end - start) + visible[end:]
+        urls = list(BARE_URL.finditer(visible))
+        for url in reversed(urls):
+            visible = visible[:url.start()] + ' ' * len(url.group()) + visible[url.end():]
         for kind, pattern in patterns.items():
-            for item in pattern.finditer(line):
+            for item in pattern.finditer(visible):
                 reference = item.group()
                 status = 'CHECKED_ID_EXISTS' if reference in source_sets[kind] else 'MISSING_ID'
                 checks.append({'location': f'line {number}', 'target': reference, 'status': status})
                 if status == 'MISSING_ID':
                     findings.append({'level': 'ERROR', 'location': f'line {number}', 'message': f'{kind} ID not found in selected source: {reference}'})
-        for match in LINK.finditer(line):
+        for url in urls:
+            checks.append({'location': f'line {number}', 'target': url.group(), 'status': 'NOT_VERIFIED'})
+            findings.append({'level': 'WARN', 'location': f'line {number}', 'message': f'External URL not verified: {url.group()}'})
+        for match in links:
             target = match.group(1).strip()
             location = f'line {number}'
             parts = urlsplit(target)

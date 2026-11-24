@@ -65,6 +65,29 @@ class SADProfileTests(unittest.TestCase):
         self.doc.write_text(CONCISE + '\n[out](escape/anything)\n')
         self.assertEqual(self.run_cli().returncode, 1)
 
+    def test_concise_metadata_can_be_plain_text(self):
+        self.manifest(sad_mode='concise')
+        table = '| Field | Value |\n| --- | --- |\n| Title | TBD |\n| Version | TBD |\n| Status | Draft |\n| Owner | TBD |\n| Date | TBD |'
+        plain = '- Title: Example\n- Version: 1\n- Status: Draft\n- Owner: Owner\n- Date: TBD'
+        self.doc.write_text(CONCISE.replace(table, plain))
+        result = self.run_cli()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.doc.write_text(CONCISE.replace(table, plain.replace('- Owner: Owner\n', '')))
+        self.assertEqual(self.run_cli().returncode, 1)
+
+    def test_inline_code_and_urls_are_not_ids_or_links(self):
+        self.manifest(sad_mode='concise')
+        (self.base / 'brd.md').write_text(BRD)
+        sources = self.base / 'sources.json'
+        sources.write_text(json.dumps({'BR': 'brd.md'}))
+        body = 'See https://example.com/BR-999, [external](https://example.com/BR-998), `BR-997` and ``cat [x](missing.md)``.'
+        self.doc.write_text(CONCISE.replace('## System Context\n\nTBD', '## System Context\n\n' + body))
+        result = self.run_cli(extra=['--sad-id-sources', sources])
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        checks = json.loads(result.stdout)['reference_checks']
+        self.assertTrue(any(c['status'] == 'NOT_VERIFIED' for c in checks))
+        self.assertFalse(any(c['status'] in ('MISSING', 'MISSING_ID') for c in checks))
+
     def test_explicit_sources(self):
         self.manifest(sad_mode='concise')
         (self.base / 'brd.md').write_text(BRD)

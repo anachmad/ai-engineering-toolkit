@@ -68,7 +68,16 @@ def validate(text, contract, mode="full"):
         for number, line in block:
             if re.match(r'^\s*Not applicable\b', line, re.I) and not re.fullmatch(r'\s*Not applicable\s*(?:—|–|:|-)\s*\S.*', line, re.I):
                 add('ERROR', f'line {number}', 'Not applicable needs a reason')
-    metadata = table('Document Information', ['Field', 'Value'])
+    metadata_lines = blocks.get('Document Information', [])
+    has_metadata_table = any(cells(line) == ['Field', 'Value'] for _, line in metadata_lines)
+    if mode == 'concise' and not has_metadata_table:
+        metadata = []
+        for number, line in metadata_lines:
+            match = re.fullmatch(r'\s*(?:[-*]\s*)?(?:\*\*)?(Title|Version|Status|Owner|Date)(?:\*\*)?\s*:\s*(.*?)\s*', line, re.I)
+            if match:
+                metadata.append((number, (match.group(1).title(), match.group(2))))
+    else:
+        metadata = table('Document Information', ['Field', 'Value'])
     fields = {}
     for number, (key, value) in metadata:
         if key in fields:
