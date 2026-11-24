@@ -44,7 +44,7 @@ When a full SAD is applicable, run `python3 playbook validate-artifact --artifac
 
 ## SAD profile selection and staged references (v2)
 
-SAD v2 uses the eight-heading concise contract for `lean` and the complete contract for `business-critical`. For `standard`, record `"sad_mode": "concise"` or `"sad_mode": "full"` in the project manifest after the owner selects it. Without a selection, the result reports `sad_applicability: REVIEW_REQUIRED` and does not assert structural compliance. Existing manifest fields remain unchanged; the optional field is compatible with schema v1. The concise draft is `skills/software-engineering-playbook/templates/sad-concise-template.md`.
+SAD v2 uses the eight-heading concise contract for `lean` and the complete contract for `business-critical`. For `standard`, record `"sad_mode": "concise"` or `"sad_mode": "full"` in the project manifest after the owner selects it. Without a selection, the result reports `sad_applicability: REVIEW_REQUIRED` and does not assert structural compliance. Existing manifest fields remain unchanged; the optional field is compatible with schema v1. The concise draft is `skills/software-engineering-playbook/templates/sad-concise-template.md`. For an existing Standard manifest, use `set-sad-mode` to preview and apply the choice with a reviewed manifest hash; rerun `init` to create a missing draft. Existing files are never rewritten.
 
 Run from the toolkit root, using actual project paths:
 

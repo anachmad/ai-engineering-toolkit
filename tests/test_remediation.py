@@ -43,7 +43,7 @@ class RemediationTests(unittest.TestCase):
     def test_ui_change_is_reviewed_and_apply_preserves_fields(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            self.assertEqual(run('init', '--path', root, '--profile', 'standard', '--name', 'Sample').returncode, 0)
+            self.assertEqual(run('init', '--path', root, '--profile', 'standard', '--name', 'Sample', '--sad-mode', 'concise').returncode, 0)
             manifest = root / '.engineering/project.yaml'
             before = manifest.read_bytes()
             proposal = run('set-ui', '--path', root, '--ui', 'yes')

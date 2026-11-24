@@ -16,7 +16,7 @@ class PlaybookTests(unittest.TestCase):
     def test_profiles_and_idempotence(self):
         for profile in ('lean', 'standard', 'business-critical'):
             with self.subTest(profile=profile), tempfile.TemporaryDirectory() as tmp:
-                args = ('init', '--path', tmp, '--profile', profile, '--name', 'Example')
+                args = ('init', '--path', tmp, '--profile', profile, '--name', 'Example') + (('--sad-mode', 'concise') if profile == 'standard' else ())
                 self.assertEqual(run(*args).returncode, 0)
                 project = Path(tmp)
                 original = (project / 'README.md').read_bytes()

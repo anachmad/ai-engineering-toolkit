@@ -78,12 +78,26 @@ For a Standard project:
 python3 -m playbook init \
   --path /tmp/my-standard-project \
   --profile standard \
+  --sad-mode concise \
   --name "My Standard Project"
 ```
+
+For Standard, choose `--sad-mode concise` or `--sad-mode full` with the project owner. If omitted, initialization preserves existing architecture files and defers a missing architecture draft until a mode is selected. Lean uses the concise SAD template and Business Critical uses the full template.
 
 Add `--ui` if the project has a user interface; this includes a UI/UX document. Without it, the manifest records UI applicability as unknown and the audit asks for review. Use `--profile business-critical` when that profile is appropriate.
 
 The generated project includes a `.engineering/project.yaml` manifest, `AGENTS.md`, `CLAUDE.md`, and documents under `docs/`. The `docs/08-reference/` directory provides a home for supporting source material; keep authoritative requirements and architecture documents linked and clearly identified. Open the drafts with your team and replace the `TBD` prompts with information you have actually agreed upon. A manifest records the standards location; a shared-project setup uses a project-relative path, while a standalone toolkit uses an absolute path. Review it if the toolkit moves or the project is used on another machine.
+
+### Select the SAD mode for an existing Standard project
+
+Preview the project owner’s choice, then apply it using the manifest hash shown by the preview:
+
+```sh
+python3 -m playbook set-sad-mode --path /path/to/project --sad-mode concise
+python3 -m playbook set-sad-mode --path /path/to/project --sad-mode concise --apply --expected-sha256 <hash-from-preview>
+```
+
+Choose `full` instead when appropriate. Run `init` again with the same profile and UI options to generate a missing architecture draft. The manifest update and initialization preserve existing architecture files; neither converts an existing document to another format.
 
 ### Update UI applicability
 
@@ -140,7 +154,7 @@ For a new project, initialize it using the project-owned copy:
 
 ```sh
 cd /path/to/existing-project
-python3 .engineering/toolkit/playbook init --path . --profile standard --name "My Project"
+python3 .engineering/toolkit/playbook init --path . --profile standard --sad-mode concise --name "My Project"
 python3 .engineering/toolkit/playbook audit --path .
 ```
 
