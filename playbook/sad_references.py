@@ -5,8 +5,84 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 LINK = re.compile(r'(?<!!)\[[^\]]*\]\(([^)]+)\)')
-INLINE_CODE = re.compile(r'(?<!`) (`+) (?!`) .*? (?<!`) \1 (?!`)', re.VERBOSE)
 BARE_URL = re.compile(r'https?://[^\s<>]+', re.I)
+
+
+def mask_code(text):
+    """Hide fenced and inline code while retaining line positions and link targets."""
+    lines, fence = [], None
+    for line in text.splitlines(keepends=True):
+        marker = re.match(r'^ {0,3}(`{3,}|~{3,})([^\r\n]*)', line)
+        if marker:
+            token, suffix = marker.groups()
+            if fence is None and (token[0] != '`' or '`' not in suffix):
+                fence = (token[0], len(token))
+                lines.append(re.sub(r'[^\r\n]', ' ', line))
+                continue
+            elif fence is not None and token[0] == fence[0] and len(token) >= fence[1] and not suffix.strip():
+                fence = None
+                lines.append(re.sub(r'[^\r\n]', ' ', line))
+                continue
+        if fence is not None:
+            lines.append(re.sub(r'[^\r\n]', ' ', line))
+        else:
+            lines.append(line)
+    text = ''.join(lines)
+    masked = list(text)
+    i = 0
+    protected_destinations = {}
+    while i < len(text):
+        if i in protected_destinations:
+            i = protected_destinations[i]
+            continue
+        if text[i] not in '[`':
+            i += 1
+            continue
+        slash = i - 1
+        while slash >= 0 and text[slash] == '\\':
+            slash -= 1
+        if (i - slash - 1) % 2:
+            i += 1
+            continue
+        if text[i] == '[':
+            link = LINK.match(text, i)
+            if link:
+                # Scan the label normally; destination backticks are literal.
+                protected_destinations[link.start(1)] = link.end(1)
+                i += 1
+                continue
+            i += 1
+            continue
+        end = i
+        while end < len(text) and text[end] == '`':
+            end += 1
+        length = end - i
+        closing = end
+        matched = False
+        while closing < len(text):
+            if text[closing] == '\n' and re.match(
+                r'\n(?:[ \t\r]*\n| {0,3}(?:#{1,6}[ \t]|>|[-+*][ \t]|[0-9]{1,9}[.)][ \t]|<(?!(?:[A-Za-z][A-Za-z0-9+.-]{1,31}:|[^ >]+@[^ >]+>))(?:!--|[!?/A-Za-z])|(?:=+|-+)[ \t]*(?:\r?\n|$)))',
+                text[closing:],
+            ):
+                # A code span cannot extend into a separate Markdown block.
+                break
+            if text[closing] != '`':
+                closing += 1
+                continue
+            after = closing
+            while after < len(text) and text[after] == '`':
+                after += 1
+            if after - closing == length:
+                for offset in range(i, after):
+                    if text[offset] not in '\r\n':
+                        masked[offset] = ' '
+                i = after
+                matched = True
+                break
+            closing = after
+        if not matched:
+            i = end
+    return ''.join(masked)
 
 
 def check(text, document, project_root, id_sources=None, id_formats=None, toolkit_root=None):
@@ -14,7 +90,7 @@ def check(text, document, project_root, id_sources=None, id_formats=None, toolki
     doc = Path(document).resolve(strict=True)
     if not root.is_dir() or not doc.is_relative_to(root):
         raise ValueError('SAD document must be inside the selected project root')
-    findings, checks, fence = [], [], None
+    findings, checks = [], []
     source_sets = {}
     patterns = {}
     if id_sources:
@@ -35,19 +111,8 @@ def check(text, document, project_root, id_sources=None, id_formats=None, toolki
             rules = (id_formats or {}).get(kind)
             expression = '|'.join(re.escape(rule['prefix']) + r'[0-9]{' + str(rule['digits']) + '}' for rule in rules) if rules else kind + r'-[0-9]{3,}'
             patterns[kind] = re.compile(r'(?<![A-Za-z0-9-])(?:' + expression + r')(?![A-Za-z0-9-])')
-    for number, line in enumerate(text.splitlines(), 1):
-        marker = re.match(r'^\s{0,3}(`{3,}|~{3,})', line)
-        if marker:
-            token = marker.group(1)
-            if fence is None:
-                fence = (token[0], len(token))
-            elif token[0] == fence[0] and len(token) >= fence[1]:
-                fence = None
-            continue
-        if fence is not None:
-            continue
-        # Mask inline code before interpreting references, preserving positions.
-        visible = INLINE_CODE.sub(lambda m: ' ' * len(m.group()), line)
+    for number, line in enumerate(mask_code(text).splitlines(), 1):
+        visible = line
         links = list(LINK.finditer(visible))
         # Link targets and bare URLs are not requirement references; labels may be.
         for link in reversed(links):

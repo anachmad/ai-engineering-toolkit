@@ -88,6 +88,78 @@ class SADProfileTests(unittest.TestCase):
         self.assertTrue(any(c['status'] == 'NOT_VERIFIED' for c in checks))
         self.assertFalse(any(c['status'] in ('MISSING', 'MISSING_ID') for c in checks))
 
+    def test_escaped_backticks_keep_real_missing_link_visible(self):
+        self.manifest(sad_mode='concise')
+        self.doc.write_text(CONCISE.replace('## System Context\n\nTBD', '## System Context\n\n' + r'\` [missing](missing.md) \`'))
+        result = self.run_cli()
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        checks = json.loads(result.stdout)['reference_checks']
+        self.assertTrue(any(c['target'] == 'missing.md' and c['status'] == 'MISSING' for c in checks))
+
+    def test_multiline_inline_code_does_not_generate_link_findings(self):
+        self.manifest(sad_mode='concise')
+        self.doc.write_text(CONCISE.replace('## System Context\n\nTBD', '## System Context\n\n`example\n[missing](missing.md)\nexample`'))
+        result = self.run_cli()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertFalse(any(c['target'] == 'missing.md' for c in json.loads(result.stdout)['reference_checks']))
+
+    def test_backticks_inside_link_destination_are_literal(self):
+        self.manifest(sad_mode='concise')
+        self.doc.write_text(CONCISE.replace('## System Context\n\nTBD', '## System Context\n\n[file](file`code`.md)'))
+        result = self.run_cli()
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        checks = json.loads(result.stdout)['reference_checks']
+        self.assertTrue(any(c['target'] == 'file`code`.md' and c['status'] == 'MISSING' for c in checks))
+
+    def test_unclosed_code_does_not_hide_link_in_next_paragraph(self):
+        self.manifest(sad_mode='concise')
+        content = '`unclosed\n\n[missing](missing.md)\n\n`'
+        self.doc.write_text(CONCISE.replace('## System Context\n\nTBD', '## System Context\n\n' + content))
+        result = self.run_cli()
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertTrue(any(c['target'] == 'missing.md' and c['status'] == 'MISSING' for c in json.loads(result.stdout)['reference_checks']))
+
+    def test_autolink_inside_multiline_code_does_not_break_span(self):
+        self.manifest(sad_mode='concise')
+        content = '`example\n<https://example.com>\n[missing](missing.md)\nend`'
+        self.doc.write_text(CONCISE.replace('## System Context\n\nTBD', '## System Context\n\n' + content))
+        result = self.run_cli()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertFalse(any(c['target'] == 'missing.md' for c in json.loads(result.stdout)['reference_checks']))
+
+    def test_unclosed_code_stops_at_new_markdown_blocks(self):
+        self.manifest(sad_mode='concise')
+        for block in ('# Heading', '- list', '> quote', '1. item', '<!-- comment -->'):
+            with self.subTest(block=block):
+                content = '`unclosed\n' + block + '\n[missing](missing.md)\n`'
+                self.doc.write_text(CONCISE.replace('## System Context\n\nTBD', '## System Context\n\n' + content))
+                result = self.run_cli()
+                self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+                self.assertTrue(any(c['target'] == 'missing.md' and c['status'] == 'MISSING' for c in json.loads(result.stdout)['reference_checks']))
+
+    def test_invalid_fence_and_setext_heading_do_not_hide_links(self):
+        self.manifest(sad_mode='concise')
+        samples = ('Unmatched ` here\n---\n[missing](missing.md)\n`', '``` invalid ` info\n[missing](missing.md)\n```')
+        for content in samples:
+            with self.subTest(content=content):
+                self.doc.write_text(CONCISE.replace('## System Context\n\nTBD', '## System Context\n\n' + content))
+                result = self.run_cli()
+                self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+                self.assertTrue(any(c['target'] == 'missing.md' and c['status'] == 'MISSING' for c in json.loads(result.stdout)['reference_checks']))
+
+    def test_code_in_link_label_is_not_checked_as_id(self):
+        self.manifest(sad_mode='concise')
+        (self.base / 'brd.md').write_text(BRD)
+        (self.base / 'exists.md').write_text('source')
+        sources = self.base / 'sources.json'
+        sources.write_text(json.dumps({'BR': 'brd.md'}))
+        self.doc.write_text(CONCISE.replace('## System Context\n\nTBD', '## System Context\n\n[`BR-999`](exists.md)'))
+        result = self.run_cli(extra=['--sad-id-sources', sources])
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        checks = json.loads(result.stdout)['reference_checks']
+        self.assertTrue(any(c['target'] == 'exists.md' and c['status'] == 'CHECKED_FILE_EXISTS' for c in checks))
+        self.assertFalse(any(c['target'] == 'BR-999' for c in checks))
+
     def test_explicit_sources(self):
         self.manifest(sad_mode='concise')
         (self.base / 'brd.md').write_text(BRD)
