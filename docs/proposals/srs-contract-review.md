@@ -1,6 +1,6 @@
 # Usulan kontrak SRS untuk review
 
-Status: **16 heading dan penggunaan nama SRS untuk file system requirements disetujui oleh pengguna pada 2026-11-23.** Aturan field dan format tabel tetap diusulkan untuk review terpisah; template dan validator SRS belum diaktifkan. Tidak ada perubahan pada dokumen proyek.
+Status: **16 heading dan penggunaan nama SRS untuk file system requirements disetujui oleh pengguna pada 2026-11-23.** Aturan field dan format tabel disetujui pada 2026-11-24; template dan validator SRS v1 telah dibuat. Tidak ada perubahan pada dokumen proyek.
 
 ## Tujuan dan posisi dokumen
 
@@ -61,10 +61,10 @@ ID sumber dan perilaku di atas hanya ilustrasi. Sumber `PR-001`, target, hasil p
 - **Deterministik:** heading, urutan, metadata, field wajib yang disepakati, format/duplikasi ID, nilai enum, dan referensi yang dapat ditemukan pada sumber yang dipilih. `TBD` dilaporkan sebagai belum lengkap. Ketentuan error versus warning perlu ditetapkan per field sebelum implementasi.
 - **Review semantik:** kejelasan, kelengkapan, konsistensi, testability, relevansi keamanan, dan keselarasan dengan sumber. Keberadaan ID tidak membuktikan hubungan tersebut benar secara makna.
 - **Persetujuan manusia:** keputusan owner/reviewer dan bukti terpisah; status atau hasil validator tidak membuktikan otorisasi.
-- **Traceability:** hubungan ke PRD atau sumber lain yang berwenang, lalu desain dan verifikasi jika relevan. Pemeriksaan lintas dokumen SRS belum diimplementasikan. Pemeriksaan PRD ke BRD yang ada hanya memeriksa keberadaan ID dalam BRD yang dipilih.
+- **Traceability:** hubungan ke PRD atau sumber lain yang berwenang, lalu desain dan verifikasi jika relevan. Validator SRS dapat memeriksa keberadaan ID pada satu PRD kanonis yang dipilih, tetapi tidak memverifikasi otoritas atau kesesuaian makna. Pemeriksaan PRD ke BRD yang ada hanya memeriksa keberadaan ID dalam BRD yang dipilih.
 - **Profil:** Lean dapat menggabungkan requirements sesuai standar saat ini; Standard dan Business Critical mengikuti kebutuhan artefak dan gate existing. Jangan otomatis menambahkan dokumen wajib atau mengurangi kontrol keamanan.
 
 ## Keputusan untuk owner
 
 1. Struktur 16 heading dan penggunaan nama SRS dengan path lama telah disetujui pada 2026-11-23.
-2. Tinjau terpisah [aturan detail dan format tabel](srs-requirement-fields.md) sebelum membuat atau mengaktifkan validator.
+2. [Aturan detail dan format tabel](srs-requirement-fields.md) disetujui pada 2026-11-24.

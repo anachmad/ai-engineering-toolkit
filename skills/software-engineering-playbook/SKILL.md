@@ -26,3 +26,11 @@ For approved artifact contracts, consult `standards/artifacts-v1.json` and `skil
 ## Product requirements documents
 
 Use `skills/software-engineering-playbook/references/prd-standard.md` and `skills/software-engineering-playbook/templates/prd-template.md` for PRDs. The section headings and detailed field rules are approved. Run `python3 <toolkit-root>/playbook validate-artifact --artifact prd --standard-version 3 --profile <profile> --path <prd.md>` and report that the PRD validator checks structure and local requirement fields, while source references and approval remain unverified. Do not treat its output as approval or verified traceability. Preserve existing documents.
+
+## System requirements documents
+
+For SRS, read `skills/software-engineering-playbook/references/srs-standard.md` and use `skills/software-engineering-playbook/templates/srs-template.md`. Preserve existing documents and project ID formats. Validate using `python3 <toolkit-root>/playbook validate-artifact --artifact srs --standard-version 1 --profile <profile> --path <srs.md>`; consult `skills/software-engineering-playbook/references/documentation-validation.md` for optional project formats, priorities and PRD source. Report unresolved warnings and review source meaning, evidence and human approval separately.
+
+## Architecture documents
+
+When a full SAD is applicable, use `skills/software-engineering-playbook/references/sad-standard.md` and `skills/software-engineering-playbook/templates/sad-template.md`. Preserve project documents and follow the approved profile. Run `python3 <toolkit-root>/playbook validate-artifact --artifact sad --standard-version 2 --profile <profile> --project-root <project-root> --path <sad.md>` and report unresolved warnings. Follow the validation guide for Standard mode selection and explicit source checks; source meaning and approval remain unverified.

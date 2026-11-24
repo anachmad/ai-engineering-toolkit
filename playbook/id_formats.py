@@ -3,7 +3,7 @@ import json
 import re
 from pathlib import Path
 
-TYPES = {'BO', 'BR', 'KPI', 'PR'}
+TYPES = {'BO', 'BR', 'KPI', 'PR', 'FR', 'NFR'}
 PREFIX = re.compile(r'[A-Z][A-Z0-9-]{0,15}')
 
 
@@ -13,7 +13,7 @@ def load(path):
         raise ValueError('Invalid ID format configuration schema')
     formats = data['formats']
     if not isinstance(formats, dict) or not formats or not set(formats) <= TYPES:
-        raise ValueError('ID formats must be a nonempty object using BO, BR, KPI or PR')
+        raise ValueError('ID formats must be a nonempty object using BO, BR, KPI, PR, FR or NFR')
     for kind, rules in formats.items():
         if not isinstance(rules, list) or not 1 <= len(rules) <= 32:
             raise ValueError(f'{kind} formats must be a list of 1–32 rules')

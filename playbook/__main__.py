@@ -190,6 +190,8 @@ def init(args, policy, prompts):
             source = ROOT / 'skills/software-engineering-playbook/templates/brd-template.md'
         if name == 'docs/01-requirements/product-requirements.md':
             source = ROOT / 'skills/software-engineering-playbook/templates/prd-template.md'
+        if name == 'docs/01-requirements/system-requirements.md':
+            source = ROOT / 'skills/software-engineering-playbook/templates/srs-template.md'
         sections = '\n'.join(f'## {section}\n\nTBD.\n' for section in prompts['documents'].get(name, []))
         template = source.read_text().replace('{{project_name}}', '${project_name}').replace('{{title}}', '${title}').replace('{{sections}}', '${sections}')
         planned[name] = string.Template(template).substitute(project_name=args.name, title=title(name), sections=sections)
@@ -239,6 +241,8 @@ def audit(args, policy):
         print(f'{"present" if present else "missing"}: {name}')
         if not present:
             missing.append(name)
+    if manifest['profile'] == 'standard' and 'sad_mode' not in manifest:
+        print('review: Standard SAD mode not selected (REVIEW_REQUIRED)')
     if manifest['ui'] == 'unknown':
         print('review: UI applicability is unknown')
     print('review: content, risk escalation, approvals, traceability and gate evidence require human assessment; presence is not compliance')
@@ -367,6 +371,10 @@ def main():
     artifact.add_argument('--profile', required=True, choices=('lean', 'standard', 'business-critical'))
     artifact.add_argument('--id-formats', help='Explicit project ID formats JSON file')
     artifact.add_argument('--brd-source', help='BRD to check for referenced business requirement IDs')
+    artifact.add_argument('--srs-priorities', help='JSON file containing project-specific SRS priority values')
+    artifact.add_argument('--prd-source', help='PRD to check for referenced product requirement IDs')
+    artifact.add_argument('--project-root', help='Project root for SAD manifest and local reference checks')
+    artifact.add_argument('--sad-id-sources', help='JSON mapping of BR/PR to project-relative source documents')
     args = parser.parse_args()
     try:
         if args.command == 'validate-artifact':
@@ -376,7 +384,7 @@ def main():
                 # Direct directory execution places the package parent outside sys.path.
                 sys.path.insert(0, str(ROOT))
                 from playbook.artifacts import validate_artifact
-            result = validate_artifact(args.path, args.artifact, args.standard_version, args.profile, args.id_formats, args.brd_source)
+            result = validate_artifact(args.path, args.artifact, args.standard_version, args.profile, args.id_formats, args.brd_source, args.srs_priorities, args.prd_source, args.project_root, args.sad_id_sources)
             print(json.dumps(result, indent=2))
             return 1 if result['outcome'] == 'FAIL' else 0
         if args.command == 'validate-brd':

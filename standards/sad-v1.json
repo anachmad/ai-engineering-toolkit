@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "sections": [
+    "Document Information",
+    "Architecture Executive Summary",
+    "Architecture Goals & Drivers",
+    "System Context",
+    "Architecture Principles",
+    "Technology Stack",
+    "High-Level Architecture",
+    "Application & Component Design",
+    "Data Architecture",
+    "Integration Architecture",
+    "Security Architecture",
+    "Infrastructure & Deployment",
+    "Reliability & Availability",
+    "Performance & Scalability",
+    "Observability & Operations",
+    "Architecture Decisions & Trade-offs",
+    "Risks & Technical Debt",
+    "Architecture Validation & Traceability"
+  ],
+  "tables": {
+    "Architecture Goals & Drivers": [
+      "Source ID / reference",
+      "Driver or constraint",
+      "Architecture implication",
+      "Status / evidence"
+    ],
+    "Architecture Decisions & Trade-offs": [
+      "Decision / ADR reference",
+      "Context",
+      "Decision or proposal",
+      "Alternatives and trade-offs",
+      "Status"
+    ],
+    "Risks & Technical Debt": [
+      "Risk / debt",
+      "Impact",
+      "Owner",
+      "Mitigation or next step",
+      "Status"
+    ],
+    "Architecture Validation & Traceability": [
+      "Requirement / source",
+      "Architecture decision or control",
+      "Verification method",
+      "Evidence / status"
+    ]
+  },
+  "decision_status": [
+    "Proposed",
+    "Accepted",
+    "Superseded",
+    "TBD"
+  ],
+  "metadata": [
+    "Title",
+    "Version",
+    "Status",
+    "Owner",
+    "Date"
+  ]
+}

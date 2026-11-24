@@ -23,7 +23,9 @@ The scaffolder creates missing files and preserves existing files. Generated doc
 
 The BRD and PRD have shared standards, templates, and validators. A PRD can also be checked against the IDs in an explicitly selected BRD. Existing project ID formats can be configured; a matching ID does not verify that the relationship is correct or approved. See the [validation guide](skills/software-engineering-playbook/references/documentation-validation.md).
 
-For the SRS, the owner has approved the [16-section structure and the existing system requirements path](docs/proposals/srs-contract-review.md). The [requirement fields and validation rules](docs/proposals/srs-requirement-fields.md) are still proposed. A dedicated SRS template and validator have not been implemented; existing project documents are not automatically migrated.
+The SRS has an approved 16-section structure, [template](skills/software-engineering-playbook/templates/srs-template.md), and validator for local requirement fields. The [approved field rules](docs/proposals/srs-requirement-fields.md) preserve existing project ID and priority conventions when configured. SRS validation can check referenced IDs in one selected PRD; human review remains necessary.
+
+SAD v2 supports a concise eight-section document for Lean, a full 18-section document for Business Critical, and an owner-selected option for Standard. For Standard, record `"sad_mode": "concise"` or `"sad_mode": "full"` in `.engineering/project.yaml`. When validating, provide `--project-root` so the tool can read that choice and check supported local references. An unselected Standard mode requires review. A matching file or ID does not prove that its meaning, evidence, or approval is valid. See the [validation guide](skills/software-engineering-playbook/references/documentation-validation.md) for commands and limitations. Existing documents are not automatically migrated.
 
 ## Choose a profile
 
