@@ -188,3 +188,5 @@ The tests cover scaffolding, preservation of existing documents, profile and man
 | [`tests/`](tests/) | Automated validation tests. |
 
 Policy and manifest files use JSON-formatted YAML, so the scaffolder can validate them with Python's standard library. For design details and planned phases, see the [architecture notes](docs/architecture.md) and [architecture and integration specification](specifications/AI_Engineering_Toolkit_Architecture_Integration_Spec_v1.md).
+
+An optional [API Specification standard](skills/software-engineering-playbook/references/api-standard.md) provides a template and validator while preserving existing authoritative API contracts. Local file checks only establish existence; API behavior, security and approval require separate evidence.

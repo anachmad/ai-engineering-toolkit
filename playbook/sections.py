@@ -8,12 +8,12 @@ def validate(text, contract):
     sections = []
     fence = None
     for index, line in enumerate(lines):
-        marker = re.match(r'^\s{0,3}(`{3,}|~{3,})', line)
+        marker = re.match(r'^\s{0,3}(`{3,}|~{3,})(.*)$', line)
         if marker:
             token = marker.group(1)
             if fence is None:
                 fence = (token[0], len(token))
-            elif token[0] == fence[0] and len(token) >= fence[1]:
+            elif token[0] == fence[0] and len(token) >= fence[1] and not marker.group(2).strip():
                 fence = None
             continue
         if fence is None and line.startswith('## '):
@@ -37,12 +37,12 @@ def visible_content_findings(text, contract):
     visible = re.sub(r'<!--.*?-->', lambda m: re.sub(r'[^\r\n]', ' ', m.group()), text, flags=re.S)
     content, current, content_fence = {}, None, None
     for line in visible.splitlines():
-        marker = re.match(r'^\s{0,3}(`{3,}|~{3,})', line)
+        marker = re.match(r'^\s{0,3}(`{3,}|~{3,})(.*)$', line)
         if marker:
             token = marker.group(1)
             if content_fence is None:
                 content_fence = (token[0], len(token))
-            elif token[0] == content_fence[0] and len(token) >= content_fence[1]:
+            elif token[0] == content_fence[0] and len(token) >= content_fence[1] and not marker.group(2).strip():
                 content_fence = None
             continue
         if content_fence is None and line.startswith('## '):

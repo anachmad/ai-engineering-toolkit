@@ -1,0 +1,13 @@
+# API Specification standard v1
+
+Status: approved structure and detailed fields. A separate API specification is optional and its applicability depends on the project; existing API contracts remain authoritative where designated. Audience: API owners, developers, consumers and reviewers. Preserve existing operations and identifiers. Do not invent behavior, evidence, limits or approvals.
+
+Use the version 1 template and the exact nine `##` headings, in order: Metadata; Overview; Authentication & Authorization; Endpoint Catalog; Request/Response Contracts; Error Handling; Versioning & Compatibility; Security & Limits; Testing & References. Each section needs visible content, `TBD`, or `Not applicable — reason`. An applicability reason requires human review.
+
+Metadata is a `Field | Value` table containing Title, Version (document version), Status (`draft`, `in-review`, `approved`, `deprecated` or `TBD`), Owner, Date (real `YYYY-MM-DD` or `TBD`), Contract source and Contract version. Source and version may be `TBD` or `Not applicable — reason`. A status value is not proof of approval.
+
+Describe the API purpose and scope in Overview; authentication and authorization requirements in Authentication & Authorization; request and response contracts or references in Request/Response Contracts; known errors in Error Handling; compatibility and version policy in Versioning & Compatibility; and applicable controls and limits in Security & Limits. Use synthetic examples, never credentials or production data. Unknowns remain `TBD`.
+
+Endpoint Catalog contains either the template's `Operation | Purpose | Version / status | Source` table, or exactly `Contract reference: see Metadata`, referring to the designated source and version in Metadata. Do not duplicate an authoritative OpenAPI contract. Testing & References uses `Requirement / source | Contract or operation | Verification method | Evidence / status`. A planned test is not execution evidence. Existing IDs are retained; this standard does not impose new IDs or validate cross-document traceability.
+
+Validate with `python3 -m playbook validate-artifact --artifact api --standard-version 1 --profile standard --path <document> [--project-root <project>]`. A plain relative local source or Markdown link is resolved relative to the document when a project root is provided, and must remain inside that root. An explicitly checked missing file is an error. URLs and unchecked or complex references are not fetched and remain unverified. File existence does not verify contract syntax, authority, implementation, security, test execution or approval. The validator reports errors and warnings; semantic review and human approval remain separate. Example: `examples/api-example.md`.
