@@ -38,3 +38,7 @@ When a full SAD is applicable, use `skills/software-engineering-playbook/referen
 ## Architecture decision records
 
 When documenting a significant architecture decision, read `skills/software-engineering-playbook/references/adr-standard.md` and use `skills/software-engineering-playbook/templates/adr-template.md`. Preserve existing decision records and project ID formats. Run `python3 <toolkit-root>/playbook validate-artifact --artifact adr --standard-version 1 --profile <profile> --path <adr.md>`; use the validation guide for optional project ID formats and local reference checks. Report unverified evidence, project-wide uniqueness and human approval separately.
+
+## Data model documentation
+
+When a separate data model is applicable, use `skills/software-engineering-playbook/references/data-model-standard.md` and `skills/software-engineering-playbook/templates/data-model-template.md`. Preserve existing models, project names and IDs; distinguish current evidence from proposed designs. Run `python3 <toolkit-root>/playbook validate-artifact --artifact data-model --standard-version 1 --profile <profile> --path <document.md>`. Report unresolved sources, database alignment, security and approval as unverified.

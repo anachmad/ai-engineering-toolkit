@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "sections": [
+    "Metadata",
+    "Scope",
+    "Data Domain & Ownership",
+    "Entity Catalog",
+    "Relationships & Cardinality",
+    "Field Dictionary",
+    "Constraints & Integrity",
+    "Migration & Retention",
+    "Validation & References"
+  ],
+  "tables": {
+    "Data Domain & Ownership": [
+      "Domain",
+      "Description",
+      "Owner",
+      "Authoritative source / version"
+    ],
+    "Entity Catalog": [
+      "Entity",
+      "Description",
+      "Domain",
+      "Identifier / key",
+      "Source"
+    ],
+    "Relationships & Cardinality": [
+      "From entity",
+      "Relationship",
+      "To entity",
+      "Cardinality",
+      "Source / notes"
+    ],
+    "Field Dictionary": [
+      "Entity",
+      "Field",
+      "Description",
+      "Type / format",
+      "Required",
+      "Sensitivity",
+      "Source"
+    ],
+    "Constraints & Integrity": [
+      "Entity / field",
+      "Constraint / rule",
+      "Source",
+      "Verification"
+    ],
+    "Migration & Retention": [
+      "Data / change",
+      "Migration or retention need",
+      "Owner",
+      "Status / evidence"
+    ],
+    "Validation & References": [
+      "Requirement / source",
+      "Model element",
+      "Verification method",
+      "Evidence / status"
+    ]
+  },
+  "metadata": [
+    "Title",
+    "Version",
+    "Status",
+    "Owner",
+    "Date"
+  ],
+  "document_status": [
+    "draft",
+    "in-review",
+    "approved",
+    "deprecated",
+    "TBD"
+  ],
+  "required_values": [
+    "Yes",
+    "No",
+    "TBD"
+  ]
+}

@@ -23,7 +23,7 @@ class ArtifactFrameworkTests(unittest.TestCase):
         self.assertEqual(registry['artifacts']['brd']['status'], 'approved')
         for key in ('contract', 'standard', 'template', 'example'):
             self.assertTrue((ROOT / registry['artifacts']['brd']['versions']['1'][key]).is_file())
-        self.assertTrue(all(v['status'] == 'proposed' for k, v in registry['artifacts'].items() if k not in ('brd', 'prd', 'srs', 'sad', 'adr')))
+        self.assertTrue(all(v['status'] == 'proposed' for k, v in registry['artifacts'].items() if k not in ('brd', 'prd', 'srs', 'sad', 'adr', 'data-model')))
 
     def test_profiles_report_warning_without_approval(self):
         for profile in ('lean', 'standard', 'business-critical'):
@@ -43,7 +43,7 @@ class ArtifactFrameworkTests(unittest.TestCase):
             result = call(*args(path=invalid))
             self.assertEqual(result.returncode, 1)
             self.assertEqual(json.loads(result.stdout)['outcome'], 'FAIL')
-        for options in (args(version='99'), args(kind='data-model'), args(kind='unknown'), args(profile='lite')):
+        for options in (args(version='99'), args(kind='api'), args(kind='unknown'), args(profile='lite')):
             self.assertEqual(call(*options).returncode, 2)
 
     def test_shared_snapshot_has_validator_and_reference(self):
