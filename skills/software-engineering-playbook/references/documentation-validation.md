@@ -63,3 +63,7 @@ Run `python3 playbook validate-artifact --artifact adr --standard-version 1 --pr
 ## Data model validation
 
 A separate data model is optional; project governance determines applicability. To validate one, run `python3 playbook validate-artifact --artifact data-model --standard-version 1 --profile standard --path path/to/data-model.md`. Entity and field names are compared exactly, with case-only collisions reported as warnings. A missing entity is an error when the local catalog is complete; if it contains TBD or is unavailable, the reference remains unverified. Use `external:<source-and-entity>` for intentionally external entities; these remain unverified. The validator rejects raw HTML blocks in data model documents; use Markdown outside code fences. It does not inspect a database, authorize sensitive data, verify privacy controls, assess migrations or establish human approval.
+
+### Optional API specification
+
+Use the [API standard](api-standard.md) and its template when applicable. Validate with `python3 -m playbook validate-artifact --artifact api --standard-version 1 --profile standard --path <document> --project-root <project>`. A local contract source is resolved relative to the document and checked for existence within the project root only. `Contract reference: see Metadata` substitutes for the endpoint table; its source and version are declared in Metadata. URLs are never fetched, and syntax, implementation and approval remain unverified.

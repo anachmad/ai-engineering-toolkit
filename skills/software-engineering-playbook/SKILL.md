@@ -42,3 +42,5 @@ When documenting a significant architecture decision, read `skills/software-engi
 ## Data model documentation
 
 When a separate data model is applicable, use `skills/software-engineering-playbook/references/data-model-standard.md` and `skills/software-engineering-playbook/templates/data-model-template.md`. Preserve existing models, project names and IDs; distinguish current evidence from proposed designs. Run `python3 <toolkit-root>/playbook validate-artifact --artifact data-model --standard-version 1 --profile <profile> --path <document.md>`. Report unresolved sources, database alignment, security and approval as unverified.
+
+When a separate API specification is applicable, follow `skills/software-engineering-playbook/references/api-standard.md` and `skills/software-engineering-playbook/templates/api-template.md`. Preserve existing authoritative contracts and operation identifiers. Run `python3 <toolkit-root>/playbook validate-artifact --artifact api --standard-version 1 --profile <profile> --path <document.md> --project-root <project-root>` and report unresolved warnings; contract existence does not establish validity or approval.

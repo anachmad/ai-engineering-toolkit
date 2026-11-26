@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "sections": [
+    "Metadata",
+    "Overview",
+    "Authentication & Authorization",
+    "Endpoint Catalog",
+    "Request/Response Contracts",
+    "Error Handling",
+    "Versioning & Compatibility",
+    "Security & Limits",
+    "Testing & References"
+  ],
+  "metadata": [
+    "Title",
+    "Version",
+    "Status",
+    "Owner",
+    "Date",
+    "Contract source",
+    "Contract version"
+  ],
+  "document_status": [
+    "draft",
+    "in-review",
+    "approved",
+    "deprecated",
+    "TBD"
+  ],
+  "tables": {
+    "Endpoint Catalog": [
+      "Operation",
+      "Purpose",
+      "Version / status",
+      "Source"
+    ],
+    "Testing & References": [
+      "Requirement / source",
+      "Contract or operation",
+      "Verification method",
+      "Evidence / status"
+    ]
+  },
+  "contract_reference_marker": "Contract reference: see Metadata"
+}

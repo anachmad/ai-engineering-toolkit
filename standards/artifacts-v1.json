@@ -115,7 +115,17 @@
       }
     },
     "api": {
-      "status": "proposed"
+      "status": "approved",
+      "approval_scope": "API specification structure and field rules; applicability is project-specific",
+      "versions": {
+        "1": {
+          "contract": "standards/api-v1.json",
+          "standard": "skills/software-engineering-playbook/references/api-standard.md",
+          "template": "skills/software-engineering-playbook/templates/api-template.md",
+          "example": "examples/api-example.md",
+          "validator": "api-fields"
+        }
+      }
     },
     "ui-ux": {
       "status": "proposed"
