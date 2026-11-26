@@ -102,7 +102,17 @@
       }
     },
     "data-model": {
-      "status": "proposed"
+      "status": "approved",
+      "approval_scope": "Data model structure and field rules; applicability is project-specific",
+      "versions": {
+        "1": {
+          "contract": "standards/data-model-v1.json",
+          "standard": "skills/software-engineering-playbook/references/data-model-standard.md",
+          "template": "skills/software-engineering-playbook/templates/data-model-template.md",
+          "example": "examples/data-model-example.md",
+          "validator": "data-model-fields"
+        }
+      }
     },
     "api": {
       "status": "proposed"

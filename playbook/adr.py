@@ -9,26 +9,7 @@ def validate(text, contract, id_formats=None):
     findings = [f for f in sections.validate(text, contract) if f['location'] != 'review']
     def add(level, location, message):
         findings.append({'level': level, 'location': location, 'message': message})
-    # Comments and fence delimiters do not constitute section content.
-    visible = re.sub(r'<!--.*?-->', lambda m: re.sub(r'[^\r\n]', ' ', m.group()), text, flags=re.S)
-    content, current, content_fence = {}, None, None
-    for line in visible.splitlines():
-        marker = re.match(r'^\s{0,3}(`{3,}|~{3,})', line)
-        if marker:
-            token = marker.group(1)
-            if content_fence is None:
-                content_fence = (token[0], len(token))
-            elif token[0] == content_fence[0] and len(token) >= content_fence[1]:
-                content_fence = None
-            continue
-        if content_fence is None and line.startswith('## '):
-            current = line[3:].strip()
-            content.setdefault(current, [])
-        elif current is not None and line.strip() and not (content_fence is None and line.lstrip().startswith('#')):
-            content[current].append(line)
-    for name in contract['sections']:
-        if name in content and not content[name]:
-            add('ERROR', name, 'Section needs visible content or TBD')
+    findings.extend(sections.visible_content_findings(text, contract))
 
     def normalize_na(value):
         value = re.sub(r'^\s*(?:(?:>\s*)|(?:[-+*]\s+)|(?:\d+[.)]\s+))*', '', value)

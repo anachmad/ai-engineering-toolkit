@@ -1,6 +1,6 @@
 # Documentation validation
 
-`standards/artifacts-v1.json` indexes artifact approval and standard versions. The canonical BRD contract remains `standards/brd-v1.json`; the registry does not repeat its rules. The PRD standard, template and field rules are approved. PRD v1 checks headings and content; PRD v2 also checks local requirement fields. SRS v1, SAD v1 and ADR v1 validate their approved structure and local fields; remaining artifact structures are proposed. Standard v1 selects the current BRD contract and template; it is not an immutable historical snapshot and the artifact does not embed its standard version. Preserve old versions in the registry and files before changing their meaning; a future migration needs an explicit versioning decision.
+`standards/artifacts-v1.json` indexes artifact approval and standard versions. The canonical BRD contract remains `standards/brd-v1.json`; the registry does not repeat its rules. The PRD standard, template and field rules are approved. PRD v1 checks headings and content; PRD v2 also checks local requirement fields. SRS v1, SAD v1, ADR v1 and Data Model v1 validate their approved structure and local fields; remaining artifact structures are proposed. Standard v1 selects the current BRD contract and template; it is not an immutable historical snapshot and the artifact does not embed its standard version. Preserve old versions in the registry and files before changing their meaning; a future migration needs an explicit versioning decision.
 
 Run locally or in a pipeline:
 
@@ -59,3 +59,7 @@ These SAD checks do not enforce security or release gates. Historical SAD v1 rem
 ## ADR validation
 
 Run `python3 playbook validate-artifact --artifact adr --standard-version 1 --profile standard --path path/to/adr.md`. To use an existing project ID format, provide `--id-formats path/to/formats.json` with an `ADR` key. Add `--project-root path/to/project` for supported relative Markdown file-link checks within that project. Missing or escaping local files fail; external and unsupported references remain unverified. The validator checks a single document, not project-wide ID uniqueness or cross-document ADR IDs. It does not verify decision quality, approval, source authority, test results or release readiness. Existing decision records are not automatically migrated.
+
+## Data model validation
+
+A separate data model is optional; project governance determines applicability. To validate one, run `python3 playbook validate-artifact --artifact data-model --standard-version 1 --profile standard --path path/to/data-model.md`. Entity and field names are compared exactly, with case-only collisions reported as warnings. A missing entity is an error when the local catalog is complete; if it contains TBD or is unavailable, the reference remains unverified. Use `external:<source-and-entity>` for intentionally external entities; these remain unverified. The validator rejects raw HTML blocks in data model documents; use Markdown outside code fences. It does not inspect a database, authorize sensitive data, verify privacy controls, assess migrations or establish human approval.
